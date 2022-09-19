@@ -9,6 +9,7 @@ GEM
       builder
       minitest (>= 5.0)
       ruby-progressbar
+    rake (13.0.6)
     ruby-progressbar (1.11.0)
 
 PLATFORMS
@@ -17,6 +18,7 @@ PLATFORMS
 DEPENDENCIES
   minitest (~> 5.16)
   minitest-reporters (~> 1.5)
+  rake
 
 RUBY VERSION
    ruby 3.1.2p20
