@@ -256,10 +256,12 @@ class Budget
     @expenses << expense
   end
 
-  def remove_expense(category, name, amount, occurance)
+  def remove_expense(name, category)
+    name = name.downcase
+    category = category.downcase
+
     @expenses.delete_if do |expense|
-      expense.category == category && expense.name == name &&
-      expense.amount == amount && expense.occurance == occurance
+      expense.category.downcase == category && expense.name.downcase == name
     end
   end
 
