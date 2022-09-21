@@ -6,6 +6,8 @@ require 'minitest/reporters'
 MiniTest::Reporters.use!
 
 require_relative '../lib/budget'
+require_relative '../lib/income'
+require_relative '../lib/expense'
 
 class BudgetTest < MiniTest::Test
   def setup
