@@ -44,7 +44,7 @@ class Money
     end
 
     if self.instance_of?(Expense)
-      self.class.new(name, new_amount, 'daily', category)
+      Expense.new(name, new_amount, 'daily', category)
     else
       self.class.new(name, new_amount, 'daily')
     end
@@ -70,7 +70,7 @@ class Money
     end
 
     if self.instance_of?(Expense)
-      self.class.new(name, new_amount, 'weekly', category)
+      Expense.new(name, new_amount, 'weekly', category)
     else
       self.class.new(name, new_amount, 'weekly')
     end
@@ -96,7 +96,7 @@ class Money
     end
 
     if self.instance_of?(Expense)
-      self.class.new(name, new_amount, 'fortnightly', category)
+      Expense.new(name, new_amount, 'fortnightly', category)
     else
       self.class.new(name, new_amount, 'fortnightly')
     end
@@ -122,7 +122,7 @@ class Money
     end
 
     if self.instance_of?(Expense)
-      self.class.new(name, new_amount, 'monthly', category)
+      Expense.new(name, new_amount, 'monthly', category)
     else
       self.class.new(name, new_amount, 'monthly')
     end
@@ -148,7 +148,7 @@ class Money
     end
 
     if self.instance_of?(Expense)
-      self.class.new(name, new_amount, 'quarterly', category)
+      Expense.new(name, new_amount, 'quarterly', category)
     else
       self.class.new(name, new_amount, 'quarterly')
     end
@@ -174,7 +174,7 @@ class Money
     end
 
     if self.instance_of?(Expense)
-      self.class.new(name, new_amount, 'six_monthly', category)
+      Expense.new(name, new_amount, 'six_monthly', category)
     else
       self.class.new(name, new_amount, 'six_monthly')
     end
@@ -200,7 +200,7 @@ class Money
     end
 
     if self.instance_of?(Expense)
-      self.class.new(name, new_amount, 'yearly', category)
+      Expense.new(name, new_amount, 'yearly', category)
     else
       self.class.new(name, new_amount, 'yearly')
     end
