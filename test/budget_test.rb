@@ -1,9 +1,4 @@
 require_relative 'test_helper'
-
-require 'minitest/autorun'
-require 'minitest/reporters'
-MiniTest::Reporters.use!
-
 require_relative '../lib/budget'
 require_relative '../lib/income'
 require_relative '../lib/expense'
