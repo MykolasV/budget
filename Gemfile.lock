@@ -4,6 +4,7 @@ GEM
     ansi (1.5.0)
     builder (3.2.4)
     docile (1.4.0)
+    erubis (2.7.0)
     minitest (5.16.3)
     minitest-reporters (1.5.0)
       ansi
@@ -42,11 +43,12 @@ PLATFORMS
   arm64-darwin-21
 
 DEPENDENCIES
+  erubis
   minitest (~> 5.16)
   minitest-reporters (~> 1.5)
   rake
   simplecov
-  sinatra (~> 2.2)
+  sinatra
   sinatra-contrib
 
 RUBY VERSION
