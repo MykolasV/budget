@@ -3,5 +3,5 @@ require 'sinatra/reloader'
 require 'tilt/erubis'
 
 get "/" do
-  erb "Welcome to the application", layout: :layout 
+  erb :income_form, layout: :layout 
 end
