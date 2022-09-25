@@ -1,5 +1,41 @@
+html {
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
 body {
   font: normal 20px "PT Sans", Helvetica, Arial, sans-serif;
   color: #3f3f3f;
   background: #ffffff;
+  text-align: center;
+}
+
+h1 {
+  font-size: 48px;
+}
+
+h2 {
+  font-size: 38px;
+  padding: 0 0 20px;
+}
+
+main {
+  padding: 40px 0 0;
+}
+
+/* ===== Income form ===== */
+
+#save_income {
+  width: 100%;
+}
+
+#save_income select {
+  width: 40%;
+}
+
+#save_income input {
+  width: 15%;
 }
