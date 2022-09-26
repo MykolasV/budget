@@ -27,15 +27,3 @@ main {
 }
 
 /* ===== Income form ===== */
-
-#save_income {
-  width: 100%;
-}
-
-#save_income select {
-  width: 40%;
-}
-
-#save_income input {
-  width: 15%;
-}
