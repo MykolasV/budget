@@ -1,3 +1,5 @@
+/* ===== CSS for all cell phones and shared cross-browser CSS ===== */
+
 html {
   box-sizing: border-box;
 }
@@ -11,6 +13,15 @@ body {
   color: #3f3f3f;
   background: #ffffff;
   text-align: center;
+  padding: 40px 0 80px;
+}
+
+main {
+  padding: 0 10px;
+}
+
+main header {
+  margin: 60px 0;
 }
 
 h1 {
@@ -22,8 +33,109 @@ h2 {
   padding: 0 0 20px;
 }
 
-main {
-  padding: 40px 0 0;
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
 }
 
 /* ===== Income form ===== */
+
+#save_income {
+  margin: 0 auto;
+}
+
+#save_income fieldset {
+  margin: 40px 0 10px;
+}
+
+.input_wrapper {
+  background-color: #f8f8f8;
+  padding: 10px;
+  margin: 0 auto 20px;
+  border: 1px solid #818181;
+  border-radius: 10px;
+}
+
+#save_income .input_wrapper dt,
+#save_income .input_wrapper dd {
+  display: inline-block;
+  width: 70%;
+  margin: 0 0 10px;
+}
+
+#save_income .input_wrapper dt {
+  width: 25%;
+}
+
+.input_wrapper label,
+.input_wrapper input {
+  display: block;
+  width: 100%;
+  padding: 6px 8px;
+}
+
+.input_wrapper label {
+  text-align: left;
+}
+
+.input_wrapper select {
+  text-align: center;
+  width: 60%;
+  padding: 6px 8px;
+}
+
+.input_wrapper input,
+.input_wrapper select {
+  font-size: 16px;
+  border: 1px solid #dedddd;
+  border-radius: 6px;
+}
+
+#save_income button,
+#save_income .add_input {
+  display: block;
+  font: inherit;
+  background-color: #f0f0f0;
+  width: 100px;
+  padding: 6px;
+  margin: 0 auto;
+  border: 1px solid #afafaf;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#save_income button {
+  margin-top: 80px;
+}
+
+#save_income button:hover,
+#save_income .add_input:hover {
+  background-color: #dedddd;
+} 
+
+/* ===== Adjustments for larger screens ===== */
+
+@media screen and (min-width: 481px) {
+
+}
+
+@media screen and (min-width: 685px) {
+  .input_wrapper {
+    width: 70%;
+  }
+}
+
+@media screen and (min-width: 961px) {
+  .input_wrapper {
+    width: 50%;
+  }
+}
+
+@media screen and (min-width: 1501px) {
+  .input_wrapper {
+    width: 40%;
+  }
+}
