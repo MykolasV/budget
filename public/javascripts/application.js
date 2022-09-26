@@ -9,10 +9,10 @@ $(()=> {
       let $element = $(element);
 
       if (element.tagName === "LABEL") {
-        $element.attr("for", $element.attr("for").replace(/\d$/, num => String(Number(num) + 1)));
+        $element.attr("for", $element.attr("for").replace(/\d+$/, num => String(Number(num) + 1)));
       } else {
-        $element.attr("id", $element.attr("id").replace(/\d$/, num => String(Number(num) + 1)));
-        $element.attr("name", $element.attr("name").replace(/\d$/, num => String(Number(num) + 1)));
+        $element.attr("id", $element.attr("id").replace(/\d+$/, num => String(Number(num) + 1)));
+        $element.attr("name", $element.attr("name").replace(/\d+$/, num => String(Number(num) + 1)));
       }
     });
 
