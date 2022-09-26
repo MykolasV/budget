@@ -1,25 +1,39 @@
-<h2>Income</h2>
+<header>
+  <h2>Income</h2>
+  <p>Some of the things you may want to include: salary, self-employment, investments, pension and benefits.</p>
+</header>
 
 <form method="post" action="" id="save_income">
   <fieldset>
     <div class="input_wrapper">
-      <select id="income_name_1" name="income_name_1">
-        <option value="salary">Salary</option>
-        <option value="self-employment">Self-Employment</option>
-        <option value="benefits">Benefits</option>
-        <option value="pension">Pension</option>
-        <option value="other">Other</option>
-      </select>
-      <input type="number" id="income_value_1" name="income_value_1" value="0" min="0">
-      <select id="income_occurance_1" name="income_occurance_1">
-        <option value="daily">Daily</option>
-        <option value="weekly">Weekly</option>
-        <option value="fortnightly">Fortnightly</option>
-        <option value="monthly">Monthly</option>
-        <option value="quarterly">Quarterly</option>
-        <option value="six-monthly">Every Six Months</option>
-        <option value="yearly">Yearly</option>
-      </select>
+      <dl>
+        <dt>
+          <label for="income_name_1">Income</label>
+        </dt>
+        <dd>
+          <input type="text" id="income_name_1" name="income_name_1">
+        </dd>
+        <dt>
+          <label for="income_amount_1">Amount</label>
+        </dt>
+        <dd>
+          <input type="number" id="income_amount_1" name="income_amount_1" value="0" min="0">
+        </dd>
+        <dt>
+          <label for="income_occurance_1">Occurance</label>
+        </dt>
+        <dd>
+          <select id="income_occurance_1" name="income_occurance_1">
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="fortnightly">Fortnightly</option>
+            <option value="monthly">Monthly</option>
+            <option value="quarterly">Quarterly</option>
+            <option value="six-monthly">Every Six Months</option>
+            <option value="yearly">Yearly</option>
+          </select>
+        </dd>
+      </dl>
     </div>
   </fieldset>
   <a herf="#" class="add_input">+Add</a>
