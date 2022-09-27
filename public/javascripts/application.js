@@ -13,6 +13,12 @@ $(()=> {
       } else {
         $element.attr("id", $element.attr("id").replace(/\d+$/, num => String(Number(num) + 1)));
         $element.attr("name", $element.attr("name").replace(/\d+$/, num => String(Number(num) + 1)));
+        
+        if (element.tagName === "INPUT") {
+          element.value = ""
+        } else {
+          element.selected = false;
+        }
       }
     });
 
