@@ -52,6 +52,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .input_wrapper {
+  position: relative;
   background-color: #f8f8f8;
   padding: 10px;
   margin: 0 auto 20px;
@@ -129,6 +130,18 @@ input[type=number]::-webkit-outer-spin-button {
   border: 1px solid red;
 }
 
+#save_income .delete img {
+  width: 27px;
+  height: 27px;
+}
+
+#save_income .delete {
+  position: absolute;
+  top: 75%;
+  right: 1%;
+  cursor: pointer;
+}
+
 /* ===== Adjustments for larger screens ===== */
 
 @media screen and (min-width: 481px) {
@@ -156,6 +169,11 @@ input[type=number]::-webkit-outer-spin-button {
   #save_income .input_wrapper dd {
     width: 18%;
     text-align: left;
+  }
+
+  #save_income .delete {
+    top: 25%;
+    right: 1%;
   }
 }
 
