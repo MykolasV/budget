@@ -123,6 +123,10 @@ input[type=number]::-webkit-outer-spin-button {
   background-color: #fbcdcd;
 }
 
+#save_income .input_wrapper input.invalid {
+  border: 1px solid red;
+}
+
 /* ===== Adjustments for larger screens ===== */
 
 @media screen and (min-width: 481px) {
