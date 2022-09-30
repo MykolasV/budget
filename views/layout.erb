@@ -14,6 +14,13 @@
     <header>
       <h1>Budget Planner</h1>
     </header>
+
+    <% if session[:error] %>
+      <div class="flash error">
+        <p><%= session.delete(:error) %></p>
+      </div>
+    <% end %>
+
     <main>
       <%= yield %>
     </main>
