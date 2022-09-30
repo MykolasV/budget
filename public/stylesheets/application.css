@@ -114,6 +114,11 @@ input[type=number]::-webkit-outer-spin-button {
   background-color: #dedddd;
 }
 
+.error {
+  color: #913b3b;
+  background-color: #fbcdcd;
+}
+
 /* ===== Adjustments for larger screens ===== */
 
 @media screen and (min-width: 481px) {
