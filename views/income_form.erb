@@ -3,12 +3,6 @@
   <p>Some of the things you may want to include: salary, self-employment, investments, pension and benefits.</p>
 </header>
 
-<% if session[:error] %>
-  <div class="flash error">
-    <p><%= session.delete(:error) %></p>
-  </div>
-<% end %>
-
 <form method="post" action="/income" id="save_income">
   <fieldset>
     <div class="input_wrapper">
