@@ -48,5 +48,5 @@ post "/income" do
 end
 
 get "/expenses" do 
-  session[:income].to_s
+  erb :expenses_form, layout: :layout
 end
