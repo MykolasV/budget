@@ -41,6 +41,22 @@ input[type=number]::-webkit-outer-spin-button {
     margin: 0; 
 }
 
+.flash {
+  padding: 4px 0;
+  margin: 60px auto 0;
+  border-radius: 8px;
+}
+
+.error {
+  color: #913b3b;
+  background-color: #fbcdcd;
+}
+
+.success {
+  color: #2f712f;
+  background-color: #c6fcc6;
+}
+
 /* ===== Income form ===== */
 
 #save_income {
@@ -113,17 +129,6 @@ input[type=number]::-webkit-outer-spin-button {
 #save_income button:hover,
 #save_income .add_input:hover {
   background-color: #dedddd;
-}
-
-.flash {
-  padding: 4px 0;
-  margin: 60px auto 0;
-  border-radius: 8px;
-}
-
-.error {
-  color: #913b3b;
-  background-color: #fbcdcd;
 }
 
 #save_income .input_wrapper input.invalid {
