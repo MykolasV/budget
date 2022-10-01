@@ -54,4 +54,30 @@ $(()=> {
       $element.removeClass("invalid");
     }
   });
+
+  $("#save_income").on("click", ".delete", event => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    $(event.target).closest(".delete").next().css("display", "block");
+    $(event.target).closest(".delete").next().next().css("display", "block");
+  });
+
+  $("#save_income").on("click", "button.cancel, .overlay", event => {
+    event.preventDefault();
+
+    let $target = $(event.target);
+    if ($target.hasClass("cancel")) {
+      $target.closest(".dialog").css("display", "none");
+      $target.closest(".dialog").next().css("display", "none");
+    } else {
+      $target.closest(".overlay").css("display", "none");
+      $target.closest(".overlay").prev().css("display", "none");
+    }
+  });
+
+  $("#save_income").on("click", "button.confirm", event => {
+    event.preventDefault();
+    $(event.target).parent().parent().remove();
+  });
 });
