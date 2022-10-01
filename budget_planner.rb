@@ -42,6 +42,7 @@ post "/income" do
     session[:error] = "Please provide the missing details."
     erb :income_form, layout: :layout
   else
+    session[:success] = "Income saved. You will be able to edit it later."
     redirect "/expenses"
   end
 end

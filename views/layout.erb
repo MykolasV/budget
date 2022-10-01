@@ -15,6 +15,12 @@
       <h1>Budget Planner</h1>
     </header>
 
+    <% if session[:success] %>
+      <div class="flash success">
+        <p><%= session.delete(:success) %></p>
+      </div>
+    <% end %>
+
     <% if session[:error] %>
       <div class="flash error">
         <p><%= session.delete(:error) %></p>
