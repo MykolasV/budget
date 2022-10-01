@@ -59,8 +59,11 @@ $(()=> {
     event.preventDefault();
     event.stopPropagation();
 
-    $(event.target).closest(".delete").next().css("display", "block");
-    $(event.target).closest(".delete").next().next().css("display", "block");
+    let $target = $(event.target);
+    if ($target.closest(".delete").parent().prev(".input_wrapper").length === 0) return;
+
+    $target.closest(".delete").next().css("display", "block");
+    $target.closest(".delete").next().next().css("display", "block");
   });
 
   $("#save_income").on("click", "button.cancel, .overlay", event => {
