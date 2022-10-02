@@ -1,8 +1,8 @@
 $(()=> {
-  $("#save_income .add_input").click(event => {
+  $("form").on("click", ".add_input", event => {
     event.preventDefault();
 
-    let $input_wrapper = $("#save_income fieldset").children(".input_wrapper").last();
+    let $input_wrapper = $(event.target).prev();
     let $new_input_wrapper = $input_wrapper.clone();
     $new_input_wrapper.find("input").removeClass("invalid");
 
@@ -23,7 +23,60 @@ $(()=> {
       }
     });
 
-    $("#save_income fieldset").append($new_input_wrapper);
+    $(event.target).before($new_input_wrapper);
+  });
+
+  $("form").on("blur", "input", event => {
+    let $element = $(event.target);
+
+    if ($element.val().trim() === "") {
+      $element.addClass("invalid");
+    } else {
+      $element.removeClass("invalid");
+    }
+  });
+
+  $("form").on("click", ".delete", event => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    let $target = $(event.target).closest(".delete");
+    if ($target.parent().hasClass("input_wrapper") &&
+        $target.parent().parent().find(".input_wrapper").length === 1) {
+      return;
+    }
+
+    $target.next().css("display", "block");
+    $target.next().next().css("display", "block");
+  });
+
+  $("form").on("click", "button.cancel, .overlay", event => {
+    event.preventDefault();
+
+    let $target = $(event.target);
+    if ($target.hasClass("cancel")) {
+      $target.closest(".dialog").css("display", "none");
+      $target.closest(".dialog").next().css("display", "none");
+    } else {
+      $target.closest(".overlay").css("display", "none");
+      $target.closest(".overlay").prev().css("display", "none");
+    }
+  });
+
+  $("form").on("click", "button.confirm", event => {
+    event.preventDefault();
+
+    $container = $(event.target).parent().parent();
+
+    if ($container.hasClass("input_wrapper")) {
+      $container.remove();
+    } else if ($container.hasClass("category_name")) {
+      $container.parent().remove();
+
+      if ($(".category_wrapper").length === 0) {
+        $("#save_expenses fieldset ~ button").css("display", "none");
+      }
+    }
   });
 
   $("#save_income").submit(event => {
@@ -45,42 +98,41 @@ $(()=> {
     }
   });
 
-  $("#save_income").on("blur", "input", event => {
-    let $element = $(event.target);
+  $("#add_category").submit(event => {
+    event.preventDefault();
 
-    if ($element.val().trim() === "") {
-      $element.addClass("invalid");
+    let category = $(event.target).find("input").val().trim();
+    $category_wrapper = $("#save_expenses .category_wrapper");
+    if ($category_wrapper.length === 1 && $category_wrapper.css("display") === "none") {
+      $category_wrapper.find(".category_name h3").text(category);
+      $category_wrapper.find(".category_name input").val(category);
+      $category_wrapper.css("display", "block");
+      $("#save_expenses fieldset ~ button").css("display", "block");
     } else {
-      $element.removeClass("invalid");
+      $new_category_wrapper = $category_wrapper.last().clone();
+      $new_input_wrapper = $new_category_wrapper.find(".input_wrapper").first();
+      $new_input_wrapper.find("input").removeClass("invalid");
+      $new_input_wrapper.find("input").val("");
+      $new_input_wrapper.find("select").val("daily");
+      $new_input_wrapper.find("input, select").each((_, element) => {
+        let $element = $(element);
+        $element.attr("id", $element.attr("id").replace(/\d+$/, num => String(Number(num) + 1)));
+        $element.attr("name", $element.attr("name").replace(/\d+$/, num => String(Number(num) + 1)));
+      }); 
+
+      $new_category_wrapper.find(".input_wrapper").remove();
+      $new_category_wrapper.find(".category_name").after($new_input_wrapper);
+
+      $new_category_wrapper.find(".category_name h3").text(category);
+      $new_category_name_input = $new_category_wrapper.find(".category_name input");
+      $new_category_name_input.attr("id", $new_category_name_input.attr("id").replace(/\d+$/, num => String(Number(num) + 1)));
+      $new_category_name_input.attr("name", $new_category_name_input.attr("name").replace(/\d+$/, num => String(Number(num) + 1)));
+      $new_category_name_input.val(category);
+
+      $new_category_wrapper.css("display", "block");
+      $category_wrapper.last().after($new_category_wrapper);
     }
-  });
 
-  $("#save_income").on("click", ".delete", event => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    let $target = $(event.target);
-    if ($target.closest(".delete").parent().prev(".input_wrapper").length === 0) return;
-
-    $target.closest(".delete").next().css("display", "block");
-    $target.closest(".delete").next().next().css("display", "block");
-  });
-
-  $("#save_income").on("click", "button.cancel, .overlay", event => {
-    event.preventDefault();
-
-    let $target = $(event.target);
-    if ($target.hasClass("cancel")) {
-      $target.closest(".dialog").css("display", "none");
-      $target.closest(".dialog").next().css("display", "none");
-    } else {
-      $target.closest(".overlay").css("display", "none");
-      $target.closest(".overlay").prev().css("display", "none");
-    }
-  });
-
-  $("#save_income").on("click", "button.confirm", event => {
-    event.preventDefault();
-    $(event.target).parent().parent().remove();
+    event.target.reset();
   });
 });
