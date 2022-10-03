@@ -11,10 +11,12 @@ before do
   session[:income] ||= []
 end
 
+# Render the income form
 get "/income" do
   erb :income_form, layout: :layout 
 end
 
+# Submit information about income
 post "/income" do
   income_names = params.keys.select { |key| key.start_with?('income_name') }
 
@@ -47,6 +49,7 @@ post "/income" do
   end
 end
 
+# Render the expenses form
 get "/expenses" do 
   erb :expenses_form, layout: :layout
 end
