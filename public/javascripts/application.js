@@ -80,8 +80,8 @@ $(()=> {
         $input_wrappers.remove();
 
         $input_wrapper.find("input").val("").removeClass("invalid");
-        $input_wrapper.find("select").attr("selected", false);
-        $container.find(".add_input").before($input_wrapper);
+        $input_wrapper.find("select").val("daily");
+        $container.find(".category_name").after($input_wrapper);
 
         $container.find(".dialog, .overlay").css("display", "none");
         $("#save_expenses fieldset ~ button").css("display", "none");
@@ -122,14 +122,17 @@ $(()=> {
       $("#save_expenses fieldset ~ button").css("display", "block");
     } else {
       $new_category_wrapper = $category_wrapper.last().clone();
-      $new_input_wrapper = $new_category_wrapper.find(".input_wrapper").first();
-      $new_input_wrapper.find("input").removeClass("invalid");
-      $new_input_wrapper.find("input").val("");
+      $new_input_wrapper = $new_category_wrapper.find(".input_wrapper").last();
+      $new_input_wrapper.find("input").val("").removeClass("invalid");
       $new_input_wrapper.find("select").val("daily");
-      $new_input_wrapper.find("input, select").each((_, element) => {
+      $new_input_wrapper.find("input, select, label").each((_, element) => {
         let $element = $(element);
-        $element.attr("id", $element.attr("id").replace(/\d+$/, num => String(Number(num) + 1)));
-        $element.attr("name", $element.attr("name").replace(/\d+$/, num => String(Number(num) + 1)));
+        if (element.tagName === "LABEL") {
+          $element.attr("for", $element.attr("for").replace(/\d+$/, num => String(Number(num) + 1)));
+        } else {
+          $element.attr("id", $element.attr("id").replace(/\d+$/, num => String(Number(num) + 1)));
+          $element.attr("name", $element.attr("name").replace(/\d+$/, num => String(Number(num) + 1)));
+        }
       }); 
 
       $new_category_wrapper.find(".input_wrapper").remove();
