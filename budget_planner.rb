@@ -53,3 +53,8 @@ end
 get "/expenses" do 
   erb :expenses_form, layout: :layout
 end
+
+# Submit information about expenses
+post "/expenses" do
+  params.to_s
+end

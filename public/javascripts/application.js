@@ -1,4 +1,8 @@
 $(()=> {
+  function snakify(name) {
+    return name.toLowerCase().split(" ").join("_");
+  }
+
   $("form").on("click", ".add_input", event => {
     event.preventDefault();
 
@@ -117,7 +121,26 @@ $(()=> {
     $category_wrapper = $("#save_expenses .category_wrapper");
     if ($category_wrapper.length === 1 && $category_wrapper.css("display") === "none") {
       $category_wrapper.find(".category_name h3").text(category);
-      $category_wrapper.find(".category_name input").val(category);
+      $category_wrapper.find(".category_name input").attr("id", "category_name_1")
+                                                    .attr("name", "category_name_1")
+                                                    .val(category);
+      $category_wrapper.find(".input_wrapper").find("label, input, select").each((_, element) => {
+        let $element = $(element);
+        if (element.tagName === "LABEL") {
+          let old_category = $element.attr("for").split(/_(name|amount|occurance)_\d+$/)[0];
+          
+          $element.attr("for", $element.attr("for").replace(old_category, snakify(category)));
+          $element.attr("for", $element.attr("for").replace(/\d+$/, "1"));
+        } else {
+          let old_category = $element.attr("name").split(/_(name|amount|occurance)_\d+$/)[0];
+          
+          $element.attr("id", $element.attr("id").replace(old_category, snakify(category)));
+          $element.attr("id", $element.attr("id").replace(/\d+$/, "1"));
+          $element.attr("name", $element.attr("name").replace(old_category, snakify(category)));
+          $element.attr("name", $element.attr("name").replace(/\d+$/, "1"));
+        }
+      });
+
       $category_wrapper.css("display", "block");
       $("#save_expenses fieldset ~ button").css("display", "block");
     } else {
@@ -128,12 +151,19 @@ $(()=> {
       $new_input_wrapper.find("input, select, label").each((_, element) => {
         let $element = $(element);
         if (element.tagName === "LABEL") {
-          $element.attr("for", $element.attr("for").replace(/\d+$/, num => String(Number(num) + 1)));
+          let old_category = $element.attr("for").split(/_(name|amount|occurance)_\d+$/)[0];
+
+          $element.attr("for", $element.attr("for").replace(old_category, snakify(category)));
+          $element.attr("for", $element.attr("for").replace(/\d+$/, "1"));
         } else {
-          $element.attr("id", $element.attr("id").replace(/\d+$/, num => String(Number(num) + 1)));
-          $element.attr("name", $element.attr("name").replace(/\d+$/, num => String(Number(num) + 1)));
+          let old_category = $element.attr("name").split(/_(name|amount|occurance)_\d+$/)[0];
+
+          $element.attr("id", $element.attr("id").replace(old_category, snakify(category)));
+          $element.attr("id", $element.attr("id").replace(/\d+$/, "1"));
+          $element.attr("name", $element.attr("name").replace(old_category, snakify(category)));
+          $element.attr("name", $element.attr("name").replace(/\d+$/, "1"));
         }
-      }); 
+      });
 
       $new_category_wrapper.find(".input_wrapper").remove();
       $new_category_wrapper.find(".category_name").after($new_input_wrapper);
