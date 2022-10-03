@@ -123,7 +123,7 @@ $(()=> {
       $category_wrapper.find(".category_name h3").text(category);
       $category_wrapper.find(".category_name input").attr("id", "category_name_1")
                                                     .attr("name", "category_name_1")
-                                                    .val(category);
+                                                    .val(snakify(category));
       $category_wrapper.find(".input_wrapper").find("label, input, select").each((_, element) => {
         let $element = $(element);
         if (element.tagName === "LABEL") {
@@ -172,7 +172,7 @@ $(()=> {
       $new_category_name_input = $new_category_wrapper.find(".category_name input");
       $new_category_name_input.attr("id", $new_category_name_input.attr("id").replace(/\d+$/, num => String(Number(num) + 1)));
       $new_category_name_input.attr("name", $new_category_name_input.attr("name").replace(/\d+$/, num => String(Number(num) + 1)));
-      $new_category_name_input.val(category);
+      $new_category_name_input.val(snakify(category));
 
       $new_category_wrapper.css("display", "block");
       $category_wrapper.last().after($new_category_wrapper);
