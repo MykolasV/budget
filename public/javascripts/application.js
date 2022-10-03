@@ -71,10 +71,22 @@ $(()=> {
     if ($container.hasClass("input_wrapper")) {
       $container.remove();
     } else if ($container.hasClass("category_name")) {
-      $container.parent().remove();
+      $container = $container.parent();
+      $input_wrappers = $container.find(".input_wrapper");
 
-      if ($(".category_wrapper").length === 0) {
+      if ($(".category_wrapper").length === 1) {
+        $container.css("display", "none");
+        $input_wrapper = $input_wrappers.first();
+        $input_wrappers.remove();
+
+        $input_wrapper.find("input").val("").removeClass("invalid");
+        $input_wrapper.find("select").attr("selected", false);
+        $container.find(".add_input").before($input_wrapper);
+
+        $container.find(".dialog, .overlay").css("display", "none");
         $("#save_expenses fieldset ~ button").css("display", "none");
+      } else {
+        $container.remove();
       }
     }
   });
