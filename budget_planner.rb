@@ -9,6 +9,7 @@ end
 
 before do
   session[:income] ||= []
+  session[:expenses] ||= {}
 end
 
 # Render the income form
@@ -33,7 +34,7 @@ post "/income" do
     end
 
     session[:income] << {
-      income: income_name,
+      name: income_name,
       amount: income_amount,
       occurance: income_occurance
     }
@@ -56,5 +57,27 @@ end
 
 # Submit information about expenses
 post "/expenses" do
-  params.to_s
+  if params.any? { |_, value| value.strip == "" }
+    session[:error] = "Please provide the missing details"
+    erb :expenses_form, layout: :layout
+  else
+    categories = params.select { |key, value| key.start_with?("category_name") }.values
+    categories.each do |category|
+      session[:expenses][category] = []
+
+      params.each do |key, value|
+        if key.include?(category)
+          field, number = key.delete_prefix("#{category}_").split("_")
+          session[:expenses][category][number.to_i - 1] ||= {}
+          session[:expenses][category][number.to_i - 1][field] = value
+        end
+      end
+    end
+
+    redirect "/summary"
+  end
+end
+
+get "/summary" do
+  "summary"
 end
