@@ -98,16 +98,27 @@ $(()=> {
   $("#save_income").submit(event => {
     event.preventDefault();
 
-    $(event.target).find("input").each((_, element) => {
+    $inputs = $(event.target).find("input");
+    let messages = [];
+    $inputs.each((_, element) => {
       let $element = $(element);
-      if ($element.val().trim() === "") {
+      let value = $element.val().trim();
+      if (value === "") {
         $element.addClass("invalid");
+        message = "Please provide the missing details.";
+        if (!messages.includes(message)) messages.push(message);
+      } else if ($inputs.filter(function() { return $(this).val() === value }).length > 1) {
+        $element.addClass("invalid");
+        message = "Income names must be unique."
+        if (!messages.includes(message)) messages.push(message);
       }
     });
 
     if ($("input.invalid").length > 0) {
       if ($(".flash.error").length < 1) {
-        $("body > header").after($("<div class = 'flash error'><p>Please provide the missing details.</p></div>"));
+        messages.forEach(message => {
+          $("body > header").after($(`<div class = 'flash error'><p>${message}</p></div>`));
+        });
       }
     } else {
       event.target.submit();

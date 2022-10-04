@@ -21,15 +21,21 @@ end
 post "/income" do
   income_names = params.keys.select { |key| key.start_with?('income_name') }
 
-  invalid_input = false
+  empty_input = false
+  name_exists = false
   income_names.each do |income_name|
-    income_name = income_name.strip
     income_number    = income_name.split("_").last
+    income_name      = params["income_name_#{income_number}"]
     income_amount    = params["income_amount_#{income_number}"]
     income_occurance = params["income_occurance_#{income_number}"]
 
     if income_name == '' || income_amount == ''
-      invalid_input = true
+      empty_input = true
+      break
+    end
+
+    if session[:income].any? { |income| income[:name] == income_name }
+      name_exists = true
       break
     end
 
@@ -40,9 +46,13 @@ post "/income" do
     }
   end
 
-  if invalid_input
+  if empty_input
     session[:income] = []
     session[:error] = "Please provide the missing details."
+    erb :income_form, layout: :layout
+  elsif name_exists
+    session[:income] = []
+    session[:error] = "Income names must be unique."
     erb :income_form, layout: :layout
   else
     session[:success] = "Income saved. You will be able to edit it later."
