@@ -50,13 +50,13 @@ post "/income" do
   end
 
   error_messages = error_messages_for_income(income)
-  if !error_messages.empty?
-    session[:error_messages] = error_messages
-    erb :income_form, layout: :layout
-  else
+  if error_messages.empty?
     session[:income] = income
     session[:success_message] = "Income saved. You will be able to edit it later."
     redirect "/expenses"
+  else
+    session[:error_messages] = error_messages
+    erb :income_form, layout: :layout
   end
 end
 
@@ -122,13 +122,13 @@ post "/expenses" do
 
   error_messages = error_messages_for_expenses(expenses_by_categories)
 
-  if !error_messages.empty?
-    session[:error_messages] = error_messages
-    erb :expenses_form, layout: :layout
-  else
+  if error_messages.empty?
     session[:expenses] = expenses_by_categories
     session[:success_message] = "Expenses saved."
     redirect "/summary"
+  else
+    session[:error_messages] = error_messages
+    erb :expenses_form, layout: :layout
   end
 end
 
