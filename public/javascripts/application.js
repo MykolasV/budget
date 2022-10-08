@@ -31,13 +31,36 @@ $(()=> {
   });
 
   $("form").on("blur", "input", event => {
-    let $element = $(event.target);
+    $(".flash").remove();
+    $(".invalid").removeClass("invalid");
 
-    if ($element.val().trim() === "") {
-      $element.addClass("invalid");
-    } else {
-      $element.removeClass("invalid");
-    }
+    let $container = $(event.target).closest(".input_wrapper").parent();
+    let $inputs = $container.find("input");
+    let $name_inputs = $inputs.filter((_, input) => $(input).attr("id").includes("name"));
+
+    let messages = [];
+    let message;
+    $inputs.each((_, input) => {
+      let $input = $(input);
+      let value = $input.val().trim();
+
+      if (value === "") {
+        $input.addClass("invalid");
+        message = "Please provide the missing details.";
+        if (!messages.includes(message)) messages.push(message);
+      } else if ($input.attr("id").includes("name") && 
+                 $name_inputs.filter((_, input) => $(input).val() === value).length > 1) {
+        $input.addClass("invalid");
+        message = `${$container.hasClass("category_wrapper") ? "Expense" : "Income"} names must be unique.`;
+        if (!messages.includes(message)) messages.push(message);
+      } else {
+        $input.removeClass("invalid");
+      }
+    });
+
+    messages.forEach(message => {
+      $("body > header").after($(`<div class = 'flash error'><p>${message}</p></div>`));
+    });
   });
 
   $("form").on("click", ".delete", event => {
@@ -98,36 +121,8 @@ $(()=> {
   $("#save_income").submit(event => {
     event.preventDefault();
 
-    $(".flash").remove();
-    $(".invalid").removeClass("invalid");
-
-    $inputs = $(event.target).find("input");
-    $name_inputs = $inputs.filter((_, input) => $(input).attr("id").includes("name"));
-
-    let messages = [];
-    let message;
-    $inputs.each((_, input) => {
-      let $input = $(input);
-      let value = $input.val().trim();
-
-      if (value === "") {
-        $input.addClass("invalid");
-        message = "Please provide the missing details.";
-        if (!messages.includes(message)) messages.push(message);
-      } else if ($input.attr("id").includes("name") &&
-                 $name_inputs.filter((_, input) => $(input).val() === value).length > 1) {
-        $input.addClass("invalid");
-        message = "Income names must be unique."
-        if (!messages.includes(message)) messages.push(message);
-      }
-    });
-
     if ($("input.invalid").length > 0) {
-      if ($(".flash.error").length < 1) {
-        messages.forEach(message => {
-          $("body > header").after($(`<div class = 'flash error'><p>${message}</p></div>`));
-        });
-      }
+      return;
     } else {
       event.target.submit();
     }
@@ -214,36 +209,8 @@ $(()=> {
   $("#save_expenses").submit(event => {
     event.preventDefault();
 
-    $(".flash").remove();
-    $(".invalid").removeClass("invalid");
-
-    let messages = [];
-    let message;
-    $("#save_expenses .category_wrapper").each((_, category_wrapper) => {
-      $inputs = $(category_wrapper).find(".input_wrapper input");
-      $name_inputs = $inputs.filter((_, input) => $(input).attr("id").includes("name"));
-
-      $inputs.each((_, input) => {
-        let $input = $(input);
-        let value = $input.val().trim();
-  
-        if (value === "") {
-          $input.addClass("invalid");
-          message = "Please provide the missing details.";
-          if (!messages.includes(message)) messages.push(message);
-        } else if ($input.attr("id").includes("name") &&
-                   $name_inputs.filter((_, input) => $(input).val() === value).length > 1) {
-          $input.addClass("invalid");
-          message = "Expense names must be unique."
-          if (!messages.includes(message)) messages.push(message);
-        }
-      });
-    });
-
     if ($("input.invalid").length > 0) {
-      messages.forEach(message => {
-        $("body > header").after($(`<div class = 'flash error'><p>${message}</p></div>`));
-      });
+      return;
     } else {
       event.target.submit();
     }
