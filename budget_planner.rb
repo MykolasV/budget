@@ -20,7 +20,7 @@ get "/income" do
     redirect "/expenses"
   end
 
-  erb :income_form, layout: :layout 
+  erb :income_form, layout: :layout
 end
 
 # Return error messages if any values are invalid
@@ -50,7 +50,7 @@ post "/income" do
   end
 
   error_messages = error_messages_for_income(income)
-  if error_messages.length > 0
+  if !error_messages.empty?
     session[:error_messages] = error_messages
     erb :income_form, layout: :layout
   else
@@ -122,7 +122,7 @@ post "/expenses" do
 
   error_messages = error_messages_for_expenses(expenses_by_categories)
 
-  if error_messages.length > 0
+  if !error_messages.empty?
     session[:error_messages] = error_messages
     erb :expenses_form, layout: :layout
   else
