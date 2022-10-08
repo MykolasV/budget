@@ -103,6 +103,9 @@ $(()=> {
 
       if ($(".category_wrapper").length === 1) {
         $container.css("display", "none");
+        $container.find(".category_name h3").text("")
+        $container.find(".category_name input").val("")
+
         $input_wrapper = $input_wrappers.first();
         $input_wrappers.remove();
 
