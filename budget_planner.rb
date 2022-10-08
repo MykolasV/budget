@@ -10,80 +10,124 @@ end
 before do
   session[:income] ||= []
   session[:expenses] ||= {}
+  session[:error_messages] ||= []
 end
 
 # Render the income form
 get "/income" do
+  if session[:income].length > 0
+    session[:success_message] = "Income saved. You will be able to edit it later."
+    redirect "/expenses"
+  end
+
   erb :income_form, layout: :layout 
+end
+
+# Return error messages if any values are invalid
+def error_messages_for_income(income)
+  messages = []
+
+  if income.any? { |inc| inc.any? { |_, value| value == "" } }
+    messages << "Please provide the missing details."
+  end
+
+  income_names = income.map { |inc| inc["name"] }
+  if income_names.any? { |name| name != "" && income_names.count(name) > 1 }
+    messages << "Income names must be unique."
+  end
+
+  messages
 end
 
 # Submit information about income
 post "/income" do
-  income_names = params.keys.select { |key| key.start_with?('income_name') }
-
-  empty_input = false
-  name_exists = false
-  income_names.each do |income_name|
-    income_number    = income_name.split("_").last
-    income_name      = params["income_name_#{income_number}"]
-    income_amount    = params["income_amount_#{income_number}"]
-    income_occurance = params["income_occurance_#{income_number}"]
-
-    if income_name == '' || income_amount == ''
-      empty_input = true
-      break
-    end
-
-    if session[:income].any? { |income| income[:name] == income_name }
-      name_exists = true
-      break
-    end
-
-    session[:income] << {
-      name: income_name,
-      amount: income_amount,
-      occurance: income_occurance
-    }
+  income = []
+  params.each do |key, value|
+    number = key.split("_").last.to_i
+    field = key.split("_")[-2]
+    income[number - 1] ||= {}
+    income[number - 1][field] = value.strip
   end
 
-  if empty_input
-    session[:income] = []
-    session[:error] = "Please provide the missing details."
-    erb :income_form, layout: :layout
-  elsif name_exists
-    session[:income] = []
-    session[:error] = "Income names must be unique."
+  error_messages = error_messages_for_income(income)
+  if error_messages.length > 0
+    session[:error_messages] = error_messages
     erb :income_form, layout: :layout
   else
-    session[:success] = "Income saved. You will be able to edit it later."
+    session[:income] = income
+    session[:success_message] = "Income saved. You will be able to edit it later."
     redirect "/expenses"
   end
 end
 
 # Render the expenses form
-get "/expenses" do 
+get "/expenses" do
+  if session[:income].length <= 0
+    session[:error_messages] << "Please provide some details about your income."
+    redirect "/income"
+  end
+
+  if session[:expenses].length > 0
+    session[:success_message] = "Expenses saved."
+    redirect "/summary"
+  end
+
   erb :expenses_form, layout: :layout
+end
+
+# Return error messages if any values are invalid
+def error_messages_for_expenses(expenses_by_categories)
+  messages = []
+
+  categories = expenses_by_categories.keys
+
+  if categories.any? { |category| category == "" }
+    messages << "Please provide the missing category names"
+  end
+
+  if categories.any? { |category| category != "" && categories.count(category) > 1 } 
+    messages << "Category names must be unique."
+  end
+
+  if expenses_by_categories.values.flatten.any? { |expense| expense.any? { |_, value| value == "" } }
+    messages << "Please provide the missing details for expenses"
+  end
+
+  if expenses_by_categories.values.any? do |expenses|
+       expense_names = expenses.map { |expense| expense["name"] }
+       expense_names.any? { |name| name != "" && expense_names.count(name) > 1 }
+     end
+    messages << "Expense names must be unique."
+  end
+
+  messages
 end
 
 # Submit information about expenses
 post "/expenses" do
-  if params.any? { |_, value| value.strip == "" }
-    session[:error] = "Please provide the missing details"
-    erb :expenses_form, layout: :layout
-  else
-    categories = params.select { |key, value| key.start_with?("category_name") }.values
-    categories.each do |category|
-      session[:expenses][category] = []
+  categories = params.select { |key, value| key.start_with?("category_name") }.values
+  expenses_by_categories = categories.each_with_object({}) do |category, obj|
+    obj[category] = []
 
-      params.each do |key, value|
-        if key.include?(category)
-          field, number = key.delete_prefix("#{category}_").split("_")
-          session[:expenses][category][number.to_i - 1] ||= {}
-          session[:expenses][category][number.to_i - 1][field] = value
-        end
+    params.each do |key, value|
+      if !key.start_with?("category_name") && key.start_with?(category)
+        number = key.split("_").last.to_i
+        field  = key.split("_")[-2]
+
+        obj[category][number - 1] ||= {}
+        obj[category][number - 1][field] = value.strip
       end
     end
+  end
 
+  error_messages = error_messages_for_expenses(expenses_by_categories)
+
+  if error_messages.length > 0
+    session[:error_messages] = error_messages
+    erb :expenses_form, layout: :layout
+  else
+    session[:expenses] = expenses_by_categories
+    session[:success_message] = "Expenses saved."
     redirect "/summary"
   end
 end

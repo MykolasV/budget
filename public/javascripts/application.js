@@ -98,17 +98,25 @@ $(()=> {
   $("#save_income").submit(event => {
     event.preventDefault();
 
+    $(".flash").remove();
+    $(".invalid").removeClass("invalid");
+
     $inputs = $(event.target).find("input");
+    $name_inputs = $inputs.filter((_, input) => $(input).attr("id").includes("name"));
+
     let messages = [];
-    $inputs.each((_, element) => {
-      let $element = $(element);
-      let value = $element.val().trim();
+    let message;
+    $inputs.each((_, input) => {
+      let $input = $(input);
+      let value = $input.val().trim();
+
       if (value === "") {
-        $element.addClass("invalid");
+        $input.addClass("invalid");
         message = "Please provide the missing details.";
         if (!messages.includes(message)) messages.push(message);
-      } else if ($inputs.filter(function() { return $(this).val() === value }).length > 1) {
-        $element.addClass("invalid");
+      } else if ($input.attr("id").includes("name") &&
+                 $name_inputs.filter((_, input) => $(input).val() === value).length > 1) {
+        $input.addClass("invalid");
         message = "Income names must be unique."
         if (!messages.includes(message)) messages.push(message);
       }
@@ -128,8 +136,19 @@ $(()=> {
   $("#add_category").submit(event => {
     event.preventDefault();
 
+    $(".flash").remove();
+
     let category = $(event.target).find("input").val().trim();
+
     $category_wrapper = $("#save_expenses .category_wrapper");
+
+    if (category === "") {
+      return;
+    } else if ($category_wrapper.filter(function() { return $(this).find(".category_name input").val() === snakify(category) }).length > 0) {
+      $("body > header").after($(`<div class = 'flash error'><p>Category names must be unique.</p></div>`));
+      return;
+    }
+
     if ($category_wrapper.length === 1 && $category_wrapper.css("display") === "none") {
       $category_wrapper.find(".category_name h3").text(category);
       $category_wrapper.find(".category_name input").attr("id", "category_name_1")
@@ -190,5 +209,43 @@ $(()=> {
     }
 
     event.target.reset();
+  });
+
+  $("#save_expenses").submit(event => {
+    event.preventDefault();
+
+    $(".flash").remove();
+    $(".invalid").removeClass("invalid");
+
+    let messages = [];
+    let message;
+    $("#save_expenses .category_wrapper").each((_, category_wrapper) => {
+      $inputs = $(category_wrapper).find(".input_wrapper input");
+      $name_inputs = $inputs.filter((_, input) => $(input).attr("id").includes("name"));
+
+      $inputs.each((_, input) => {
+        let $input = $(input);
+        let value = $input.val().trim();
+  
+        if (value === "") {
+          $input.addClass("invalid");
+          message = "Please provide the missing details.";
+          if (!messages.includes(message)) messages.push(message);
+        } else if ($input.attr("id").includes("name") &&
+                   $name_inputs.filter((_, input) => $(input).val() === value).length > 1) {
+          $input.addClass("invalid");
+          message = "Expense names must be unique."
+          if (!messages.includes(message)) messages.push(message);
+        }
+      });
+    });
+
+    if ($("input.invalid").length > 0) {
+      messages.forEach(message => {
+        $("body > header").after($(`<div class = 'flash error'><p>${message}</p></div>`));
+      });
+    } else {
+      event.target.submit();
+    }
   });
 });
