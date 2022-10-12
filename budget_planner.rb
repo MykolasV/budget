@@ -135,5 +135,5 @@ post "/expenses" do
 end
 
 get "/summary" do
-  "summary"
+  erb :summary, layout: :layout
 end
