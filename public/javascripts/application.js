@@ -1,8 +1,4 @@
 $(()=> {
-  function snakify(name) {
-    return name.toLowerCase().split(" ").join("_");
-  }
-
   $("form").on("click", ".add_input", event => {
     event.preventDefault();
 
@@ -20,7 +16,8 @@ $(()=> {
         $element.attr("name", $element.attr("name").replace(/\d+$/, num => String(Number(num) + 1)));
         
         if (element.tagName === "INPUT") {
-          element.value = ""
+          $element.val("");
+          if ($element.attr("id").includes("name")) $element.attr("data-previous-value", "");
         } else {
           element.selected = false;
         }
@@ -30,37 +27,49 @@ $(()=> {
     $(event.target).before($new_input_wrapper);
   });
 
-  $("form").on("blur", "input", event => {
+  $("#save_income, #save_expenses").on("blur", "input", event => {
     $(".flash").remove();
-    $(".invalid").removeClass("invalid");
 
-    let $container = $(event.target).closest(".input_wrapper").parent();
+    let $input = $(event.target);
+    let value = $input.val().trim();
+    let $container = $input.closest(".input_wrapper").parent();
     let $inputs = $container.find("input");
-    let $name_inputs = $inputs.filter((_, input) => $(input).attr("id").includes("name"));
 
-    let messages = [];
+    let isNameInput = $input.attr("id").includes("name");
+    let $nameInputs;
+    let $duplicates;
+    let $previousValueDuplicates
+    if (isNameInput) {
+      $nameInputs = $inputs.filter((_, input) => $(input).attr("id").includes("name")); 
+      $duplicates = $nameInputs.filter((_, input) => $input[0] !== input && $(input).val() === value);
+      $previousValueDuplicates = $nameInputs.filter((_, input) => $input[0] !== input && $(input).val() === $input.attr("data-previous-value"));
+    }
+
+    if (value === "") {
+      $input.addClass("invalid").addClass("empty").removeClass("duplicate");
+    } else if (isNameInput && $duplicates.length > 0) {
+      $input.addClass("invalid").addClass("duplicate").removeClass("empty");
+      $duplicates.addClass("invalid").addClass("duplicate").removeClass("empty");
+    } else {
+      $input.removeClass("invalid").removeClass("empty").removeClass("duplicate");
+    }
+
+    if (isNameInput && $previousValueDuplicates.length === 1 && $previousValueDuplicates.val() !== value) {
+      $previousValueDuplicates.removeClass("invalid").removeClass("duplicate");
+    }
+
+    if (isNameInput) $input.attr("data-previous-value", value);
+
     let message;
-    $inputs.each((_, input) => {
-      let $input = $(input);
-      let value = $input.val().trim();
-
-      if (value === "") {
-        $input.addClass("invalid");
-        message = "Please provide the missing details.";
-        if (!messages.includes(message)) messages.push(message);
-      } else if ($input.attr("id").includes("name") && 
-                 $name_inputs.filter((_, input) => $(input).val() === value).length > 1) {
-        $input.addClass("invalid");
-        message = `${$container.hasClass("category_wrapper") ? "Expense" : "Income"} names must be unique.`;
-        if (!messages.includes(message)) messages.push(message);
-      } else {
-        $input.removeClass("invalid");
-      }
-    });
-
-    messages.forEach(message => {
+    if ($(".invalid.empty").length > 0) {
+      message = "Please provide the missing details.";
       $("body > header").after($(`<div class = 'flash error'><p>${message}</p></div>`));
-    });
+    }
+
+    if ($(".invalid.duplicate").length > 0) {
+      message = `${$container.hasClass("category_wrapper") ? "Expense" : "Income"} names must be unique.`;
+      $("body > header").after($(`<div class = 'flash error'><p>${message}</p></div>`));
+    }
   });
 
   $("form").on("click", ".delete", event => {
@@ -93,13 +102,24 @@ $(()=> {
   $("form").on("click", "button.confirm", event => {
     event.preventDefault();
 
-    $container = $(event.target).parent().parent();
+    let $container = $(event.target).parent().parent();
+    let $invalidInputs;
+    let $allEmpty;
+    let $duplicates;
 
     if ($container.hasClass("input_wrapper")) {
+      $invalidInputs = $container.find(".invalid");
+      $allEmpty = $(".invalid.empty");
+      $duplicates = $container.parent().find(".invalid.duplicate");
+
       $container.remove();
     } else if ($container.hasClass("category_name")) {
       $container = $container.parent();
-      $input_wrappers = $container.find(".input_wrapper");
+      let $input_wrappers = $container.find(".input_wrapper");
+
+      $invalidInputs = $container.find(".invalid");
+      $allEmpty = $(".invalid.empty");
+      $duplicates = $container.find(".invalid.duplicate");
 
       if ($(".category_wrapper").length === 1) {
         $container.css("display", "none");
@@ -119,15 +139,16 @@ $(()=> {
         $container.remove();
       }
     }
-  });
 
-  $("#save_income").submit(event => {
-    event.preventDefault();
+    if ($invalidInputs.length > 0) {
+      if ($invalidInputs.hasClass("empty") && $allEmpty.length <= 1) {
+        $(".flash.error").filter((_, error) => $(error).find("p").text().includes("missing details")).remove();
+      }
 
-    if ($("input.invalid").length > 0) {
-      return;
-    } else {
-      event.target.submit();
+      if ($invalidInputs.hasClass("duplicate") && $duplicates.length <= 2) {
+        $duplicates.removeClass("invalid").removeClass("duplicate");
+        $(".flash.error").filter((_, error) => $(error).find("p").text().includes("unique")).remove();
+      }
     }
   });
 
@@ -166,6 +187,8 @@ $(()=> {
           $element.attr("id", $element.attr("id").replace(/\d+$/, "1"));
           $element.attr("name", $element.attr("name").replace(old_category, snakify(category)));
           $element.attr("name", $element.attr("name").replace(/\d+$/, "1"));
+
+          if (element.tagName === "INPUT" && element.id.includes("name")) $element.attr("data-previous-value", "");
         }
       });
 
@@ -190,6 +213,8 @@ $(()=> {
           $element.attr("id", $element.attr("id").replace(/\d+$/, "1"));
           $element.attr("name", $element.attr("name").replace(old_category, snakify(category)));
           $element.attr("name", $element.attr("name").replace(/\d+$/, "1"));
+
+          if (element.tagName === "INPUT" && element.id.includes("name")) $element.attr("data-previous-value", "");
         }
       });
 
@@ -209,13 +234,61 @@ $(()=> {
     event.target.reset();
   });
 
-  $("#save_expenses").submit(event => {
-    event.preventDefault();
+  $("#save_income, #save_expenses").submit(event => {
+   event.preventDefault();
 
-    if ($("input.invalid").length > 0) {
+    $(".flash").remove();
+    $(".invalid").removeClass("invalid").removeClass("empty").removeClass("duplicate");
+
+    if ($(".category_wrapper").length > 0) {
+      $(".category_wrapper").each((_, category_wrapper) => {
+        let $inputs = $(category_wrapper).find(".input_wrapper input");
+        markInvalidInputs($inputs);
+      });
+    } else {
+      let $inputs = $(".input_wrapper input");
+      markInvalidInputs($inputs);
+    }
+
+    let message;
+    if ($(".invalid.empty").length > 0) {
+      message = "Please provide the missing details.";
+      $("body > header").after($(`<div class = 'flash error'><p>${message}</p></div>`));
+    }
+
+    if ($(".invalid.duplicate").length > 0) {
+      message = `${$(".category_wrapper").length > 0 ? "Expense" : "Income"} names must be unique.`;
+      $("body > header").after($(`<div class = 'flash error'><p>${message}</p></div>`));
+    }
+
+    if ($(".invalid").length > 0) {
       return;
     } else {
       event.target.submit();
     }
   });
+
+  // ===== Helper Methods =====
+
+  function snakify(name) {
+    return name.toLowerCase().split(" ").join("_");
+  }
+
+  function markInvalidInputs($inputs) {
+    let $nameInputs = $inputs.filter((_, input) => $(input).attr("id").includes("name"));
+
+    $inputs.each((_, input) => {
+      let $input = $(input);
+      let value = $input.val().trim();
+
+      if (value === "") {
+        $input.addClass("invalid").addClass("empty").removeClass("duplicate");
+      } else if ($input.attr("id").includes("name") && 
+                $nameInputs.filter((_, input) => $(input).val() === value).length > 1) {
+        $input.addClass("invalid").addClass("duplicate").removeClass("empty");
+      } else {
+        $input.removeClass("invalid").removeClass("empty").removeClass("duplicate");
+      }
+    });
+  }
 });
