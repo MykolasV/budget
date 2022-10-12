@@ -2,20 +2,20 @@ $(()=> {
   $("form").on("click", ".add_input", event => {
     event.preventDefault();
 
-    let $input_wrapper = $(event.target).prev();
-    let $new_input_wrapper = $input_wrapper.clone();
-    $new_input_wrapper.find("input").removeClass("invalid");
+    let $inputWrapper = $(event.target).prev();
+    let $newInputWrapper = $inputWrapper.clone();
+    $newInputWrapper.find("input").removeClass("invalid");
 
-    $new_input_wrapper.find("label, input, select").each((_, element) => {
+    $newInputWrapper.find("label, input, select").each((_, element) => {
       let $element = $(element);
 
-      if (element.tagName === "LABEL") {
+      if ($element.prop("tagName") === "LABEL") {
         $element.attr("for", $element.attr("for").replace(/\d+$/, num => String(Number(num) + 1)));
       } else {
         $element.attr("id", $element.attr("id").replace(/\d+$/, num => String(Number(num) + 1)));
         $element.attr("name", $element.attr("name").replace(/\d+$/, num => String(Number(num) + 1)));
         
-        if (element.tagName === "INPUT") {
+        if ($element.prop("tagName") === "INPUT") {
           $element.val("");
           if ($element.attr("id").includes("name")) $element.attr("data-previous-value", "");
         } else {
@@ -24,7 +24,7 @@ $(()=> {
       }
     });
 
-    $(event.target).before($new_input_wrapper);
+    $(event.target).before($newInputWrapper);
   });
 
   $("#save_income, #save_expenses").on("blur", "input", event => {
@@ -115,7 +115,7 @@ $(()=> {
       $container.remove();
     } else if ($container.hasClass("category_name")) {
       $container = $container.parent();
-      let $input_wrappers = $container.find(".input_wrapper");
+      let $inputWrappers = $container.find(".input_wrapper");
 
       $invalidInputs = $container.find(".invalid");
       $allEmpty = $(".invalid.empty");
@@ -126,12 +126,12 @@ $(()=> {
         $container.find(".category_name h3").text("")
         $container.find(".category_name input").val("")
 
-        $input_wrapper = $input_wrappers.first();
-        $input_wrappers.remove();
+        $inputWrapper = $inputWrappers.first();
+        $inputWrappers.remove();
 
-        $input_wrapper.find("input").val("").removeClass("invalid");
-        $input_wrapper.find("select").val("daily");
-        $container.find(".category_name").after($input_wrapper);
+        $inputWrapper.find("input").val("").removeClass("invalid");
+        $inputWrapper.find("select").val("daily");
+        $container.find(".category_name").after($inputWrapper);
 
         $container.find(".dialog, .overlay").css("display", "none");
         $("#save_expenses fieldset ~ button").css("display", "none");
@@ -159,76 +159,76 @@ $(()=> {
 
     let category = $(event.target).find("input").val().trim();
 
-    $category_wrapper = $("#save_expenses .category_wrapper");
+    $categoryWrapper = $("#save_expenses .category_wrapper");
 
     if (category === "") {
       return;
-    } else if ($category_wrapper.filter(function() { return $(this).find(".category_name input").val() === snakify(category) }).length > 0) {
+    } else if ($categoryWrapper.filter(function() { return $(this).find(".category_name input").val() === snakify(category) }).length > 0) {
       $("body > header").after($(`<div class = 'flash error'><p>Category names must be unique.</p></div>`));
       return;
     }
 
-    if ($category_wrapper.length === 1 && $category_wrapper.css("display") === "none") {
-      $category_wrapper.find(".category_name h3").text(category);
-      $category_wrapper.find(".category_name input").attr("id", "category_name_1")
+    if ($categoryWrapper.length === 1 && $categoryWrapper.css("display") === "none") {
+      $categoryWrapper.find(".category_name h3").text(category);
+      $categoryWrapper.find(".category_name input").attr("id", "category_name_1")
                                                     .attr("name", "category_name_1")
                                                     .val(snakify(category));
-      $category_wrapper.find(".input_wrapper").find("label, input, select").each((_, element) => {
+      $categoryWrapper.find(".input_wrapper").find("label, input, select").each((_, element) => {
         let $element = $(element);
-        if (element.tagName === "LABEL") {
-          let old_category = $element.attr("for").split(/_(name|amount|occurance)_\d+$/)[0];
+        if ($element.prop("tagName") === "LABEL") {
+          let oldCategory = $element.attr("for").split(/_(name|amount|occurance)_\d+$/)[0];
           
-          $element.attr("for", $element.attr("for").replace(old_category, snakify(category)));
+          $element.attr("for", $element.attr("for").replace(oldCategory, snakify(category)));
           $element.attr("for", $element.attr("for").replace(/\d+$/, "1"));
         } else {
-          let old_category = $element.attr("name").split(/_(name|amount|occurance)_\d+$/)[0];
+          let oldCategory = $element.attr("name").split(/_(name|amount|occurance)_\d+$/)[0];
           
-          $element.attr("id", $element.attr("id").replace(old_category, snakify(category)));
+          $element.attr("id", $element.attr("id").replace(oldCategory, snakify(category)));
           $element.attr("id", $element.attr("id").replace(/\d+$/, "1"));
-          $element.attr("name", $element.attr("name").replace(old_category, snakify(category)));
+          $element.attr("name", $element.attr("name").replace(oldCategory, snakify(category)));
           $element.attr("name", $element.attr("name").replace(/\d+$/, "1"));
 
-          if (element.tagName === "INPUT" && element.id.includes("name")) $element.attr("data-previous-value", "");
+          if ($element.prop("tagName") === "INPUT" && element.id.includes("name")) $element.attr("data-previous-value", "");
         }
       });
 
-      $category_wrapper.css("display", "block");
+      $categoryWrapper.css("display", "block");
       $("#save_expenses fieldset ~ button").css("display", "block");
     } else {
-      $new_category_wrapper = $category_wrapper.last().clone();
-      $new_input_wrapper = $new_category_wrapper.find(".input_wrapper").last();
-      $new_input_wrapper.find("input").val("").removeClass("invalid");
-      $new_input_wrapper.find("select").val("daily");
-      $new_input_wrapper.find("input, select, label").each((_, element) => {
+      $newCategoryWrapper = $categoryWrapper.last().clone();
+      $newInputWrapper = $newCategoryWrapper.find(".input_wrapper").last();
+      $newInputWrapper.find("input").val("").removeClass("invalid");
+      $newInputWrapper.find("select").val("daily");
+      $newInputWrapper.find("input, select, label").each((_, element) => {
         let $element = $(element);
-        if (element.tagName === "LABEL") {
-          let old_category = $element.attr("for").split(/_(name|amount|occurance)_\d+$/)[0];
+        if ($element.prop("tagName") === "LABEL") {
+          let oldCategory = $element.attr("for").split(/_(name|amount|occurance)_\d+$/)[0];
 
-          $element.attr("for", $element.attr("for").replace(old_category, snakify(category)));
+          $element.attr("for", $element.attr("for").replace(oldCategory, snakify(category)));
           $element.attr("for", $element.attr("for").replace(/\d+$/, "1"));
         } else {
-          let old_category = $element.attr("name").split(/_(name|amount|occurance)_\d+$/)[0];
+          let oldCategory = $element.attr("name").split(/_(name|amount|occurance)_\d+$/)[0];
 
-          $element.attr("id", $element.attr("id").replace(old_category, snakify(category)));
+          $element.attr("id", $element.attr("id").replace(oldCategory, snakify(category)));
           $element.attr("id", $element.attr("id").replace(/\d+$/, "1"));
-          $element.attr("name", $element.attr("name").replace(old_category, snakify(category)));
+          $element.attr("name", $element.attr("name").replace(oldCategory, snakify(category)));
           $element.attr("name", $element.attr("name").replace(/\d+$/, "1"));
 
-          if (element.tagName === "INPUT" && element.id.includes("name")) $element.attr("data-previous-value", "");
+          if ($element.prop("tagName") === "INPUT" && element.id.includes("name")) $element.attr("data-previous-value", "");
         }
       });
 
-      $new_category_wrapper.find(".input_wrapper").remove();
-      $new_category_wrapper.find(".category_name").after($new_input_wrapper);
+      $newCategoryWrapper.find(".input_wrapper").remove();
+      $newCategoryWrapper.find(".category_name").after($newInputWrapper);
 
-      $new_category_wrapper.find(".category_name h3").text(category);
-      $new_category_name_input = $new_category_wrapper.find(".category_name input");
-      $new_category_name_input.attr("id", $new_category_name_input.attr("id").replace(/\d+$/, num => String(Number(num) + 1)));
-      $new_category_name_input.attr("name", $new_category_name_input.attr("name").replace(/\d+$/, num => String(Number(num) + 1)));
-      $new_category_name_input.val(snakify(category));
+      $newCategoryWrapper.find(".category_name h3").text(category);
+      $newCategoryNameInput = $newCategoryWrapper.find(".category_name input");
+      $newCategoryNameInput.attr("id", $newCategoryNameInput.attr("id").replace(/\d+$/, num => String(Number(num) + 1)));
+      $newCategoryNameInput.attr("name", $newCategoryNameInput.attr("name").replace(/\d+$/, num => String(Number(num) + 1)));
+      $newCategoryNameInput.val(snakify(category));
 
-      $new_category_wrapper.css("display", "block");
-      $category_wrapper.last().after($new_category_wrapper);
+      $newCategoryWrapper.css("display", "block");
+      $categoryWrapper.last().after($newCategoryWrapper);
     }
 
     event.target.reset();
@@ -241,8 +241,8 @@ $(()=> {
     $(".invalid").removeClass("invalid").removeClass("empty").removeClass("duplicate");
 
     if ($(".category_wrapper").length > 0) {
-      $(".category_wrapper").each((_, category_wrapper) => {
-        let $inputs = $(category_wrapper).find(".input_wrapper input");
+      $(".category_wrapper").each((_, categoryWrapper) => {
+        let $inputs = $(categoryWrapper).find(".input_wrapper input");
         markInvalidInputs($inputs);
       });
     } else {
