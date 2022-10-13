@@ -126,10 +126,15 @@ $(()=> {
         $container.find(".category_name h3").text("")
         $container.find(".category_name input").val("")
 
-        $inputWrapper = $inputWrappers.first();
+        let $inputWrapper = $inputWrappers.first();
         $inputWrappers.remove();
 
         $inputWrapper.find("input").val("").removeClass("invalid");
+        $inputWrapper.find("input").each((_, input) => {
+          let $input = $(input);
+          if ($input.attr("id").includes("name")) $input.attr("data-previous-value", "");
+        });
+  
         $inputWrapper.find("select").val("daily");
         $container.find(".category_name").after($inputWrapper);
 
