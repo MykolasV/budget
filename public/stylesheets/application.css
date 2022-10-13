@@ -268,10 +268,6 @@ input[type=number]::-webkit-outer-spin-button {
     padding-left: 20px;
     padding-right: 20px;
   }
-
-  /* #save_expenses .category_name .delete {
-    right: 60%;
-  } */
 }
 
 @media screen and (min-width: 961px) {
@@ -303,10 +299,6 @@ input[type=number]::-webkit-outer-spin-button {
     padding-left: 40px;
     padding-right: 40px;
   }
-
-  /* #save_expenses .category_name .delete {
-    right: 70%;
-  } */
 }
 
 @media screen and (min-width: 1501px) {
@@ -320,8 +312,4 @@ input[type=number]::-webkit-outer-spin-button {
     padding-left: 80px;
     padding-right: 80px;
   }
-
-  /* #save_expenses .category_name .delete {
-    right: 65%;
-  } */
 }
