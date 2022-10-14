@@ -251,6 +251,50 @@ input[type=number]::-webkit-outer-spin-button {
   vertical-align: sub;
 }
 
+/* ===== Summary Page ===== */
+
+#summary {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  justify-content: center;
+  width: 95%;
+  padding: 100px 20px;
+  margin: 0 auto;
+  border: 1px solid #dedddd;
+  border-radius: 12px;
+}
+
+#summary #income,
+#summary #expenses {
+  width: 100%;
+  padding: 0 20px;
+  font-size: 0;
+}
+
+#summary dl {
+  margin: 40px 0;
+}
+
+#summary dt,
+#summary dd {
+  display: inline-block;
+  font-size: 1.2rem;
+  width: 50%;
+  padding: 0 0 10px;
+  margin: 10px 0;
+  border-bottom: 1px solid #dedddd;;
+}
+
+#summary dt {
+  text-align: left;
+}
+
+#summary dd {
+  text-align: right;
+  margin-bottom: 40px;
+}
+
 /* ===== Adjustments for larger screens ===== */
 
 @media screen and (min-width: 481px) {
@@ -267,6 +311,16 @@ input[type=number]::-webkit-outer-spin-button {
   #save_expenses .category_wrapper {
     padding-left: 20px;
     padding-right: 20px;
+  }
+
+  #summary {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  #summary #income,
+  #summary #expenses {
+    width: 50%;
   }
 }
 
@@ -298,6 +352,10 @@ input[type=number]::-webkit-outer-spin-button {
   #save_expenses .category_wrapper {
     padding-left: 40px;
     padding-right: 40px;
+  }
+
+  #summary {
+    width: 70%;
   }
 }
 

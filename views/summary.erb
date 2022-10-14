@@ -1,3 +1,32 @@
 <header>
   <h2>Summary</h2>
 </header>
+
+<div id="summary">
+  <section id="income">
+    <h3>Income: <%= @monthly_income_total %></h3>
+    <dl>
+      <% @monthly_income.each do |income| %>
+        <dt><%= income[:name] %></dt>
+        <dd><%= income[:amount] %></dd>
+      <% end %>
+    </dl>
+  </section>
+
+  <section id="expenses">
+    <h3>Expenses: <%= @monthly_income_total %></h3>
+    <dl>
+      <% @monthly_expenses.each do |category, expenses| %>
+        <dt class="category"><%= category %></dt>
+        <dd>
+          <dl>
+          <% expenses.each do |expense| %>
+            <dt><%= expense[:name] %></dt>
+            <dd><%= expense[:amount] %></dd>
+          <% end %>
+          </dl>
+        </dd>
+      <% end %>
+    </dl>
+  </section>
+</div>

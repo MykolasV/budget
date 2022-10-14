@@ -1,6 +1,7 @@
 require "sinatra"
 require "sinatra/reloader"
 require "tilt/erubis"
+require "date"
 
 configure do
   enable :sessions
@@ -134,6 +135,35 @@ post "/expenses" do
   end
 end
 
+# Return the converted monthly amount
+def to_monthly(amount, occurance)
+  days_in_year   = Date.today.leap? ? 366 : 365
+  weeks_in_year  = days_in_year / 7.0
+
+  if occurance == 'daily'
+    amount = (amount * days_in_year) / 12
+  elsif occurance == 'weekly'
+    amount = (amount * weeks_in_year) / 12
+  elsif occurance == 'fortnightly'
+    amount = ((amount / 2) * weeks_in_year) / 12
+  elsif occurance == 'quarterly'
+    amount = (amount * 4) / 12
+  elsif occurance == 'six_monthly'
+    amount = (amount * 2) / 12
+  elsif occurance == 'yearly'
+    amount = amount / 12
+  end
+
+  amount.round(2)
+end
+
 get "/summary" do
+  @monthly_income = session[:income].values.map { |income| { name: income["name"], amount: to_monthly(income["amount"].to_f, income["occurance"]) } }
+  @monthly_income_total = @monthly_income.reduce(0) { |sum, income| sum + income[:amount] }
+  @monthly_expenses = session[:expenses].keys.each_with_object({}) do |category, obj|
+    obj[category] = session[:expenses][category].values.map { |expense| { name: expense["name"], amount: to_monthly(expense["amount"].to_f, expense["occurance"]) } }
+  end
+  @monthly_expenses_total = @monthly_expenses.values.flatten.reduce(0) { |sum, expense| sum + expense[:amount] }
+
   erb :summary, layout: :layout
 end
