@@ -24,6 +24,16 @@ main {
   padding: 0 10px;
 }
 
+main::before,
+main::after {
+  content: "";
+  display: block;
+}
+
+main::after {
+  clear: both;
+}
+
 main header {
   margin: 60px 0;
 }
@@ -260,17 +270,8 @@ header select {
   border-radius: 6px;
 }
 
-dl, dt, dd {
-  height: auto;
-}
-
 #summary {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  gap: 50px;
-  justify-content: center;
-  width: 95%;
+  width: 360px;
   margin: 0 auto;
 }
 
@@ -282,6 +283,18 @@ dl, dt, dd {
   font-size: 0;
   border: 1px solid #dedddd;
   border-radius: 12px;
+  background-color: #f5f5f5;
+  float: left;
+}
+
+#summary #expenses {
+  float: right;
+  padding-bottom: 0;
+}
+
+#summary #expenses,
+#summary #spare_cash {
+  margin: 60px 0 0;
 }
 
 #summary dl {
@@ -308,7 +321,6 @@ dl, dt, dd {
 #summary #income dd,
 #summary #expenses dd {
   text-align: right;
-  margin-bottom: 40px;
   width: 40%;
 }
 
@@ -331,6 +343,10 @@ dl, dt, dd {
 
 #summary #expenses .category ~ dd dl {
   font-size: 0;
+}
+
+#summary #expenses > dl {
+  margin-bottom: 0;
 }
 
 /* ===== Adjustments for larger screens ===== */
@@ -383,14 +399,17 @@ dl, dt, dd {
   }
 
   #summary {
-    flex-direction: row;
-    justify-content: center;
+    width: 900px;
   }
 
   #summary #income,
   #summary #expenses,
   #summary #spare_cash {
     width: 45%;
+  }
+
+  #summary #expenses {
+    margin: 0;
   }
 }
 

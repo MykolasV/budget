@@ -273,6 +273,28 @@ $(()=> {
     }
   });
 
+  $(".amount").each((_, amount) => {
+    let $amount = $(amount);
+    $amount.text(parseFloat($amount.text()).toLocaleString());
+  });
+
+  $("select#occurance").change(event => {
+    $(".flash").remove();
+
+    let $select = $(event.target);
+    let prevOccurance = $select.attr("data-occurance");
+    let newOccurance = $select.find("option:selected").val();
+
+    $(".amount").each((_, amount) => {
+      let $amount = $(amount);
+      let value = parseFloat($amount.text().replace(/,/g, ""));
+      let newValue = parseFloat(convertAmount(value, prevOccurance, newOccurance));
+      $amount.text(newValue.toLocaleString());
+    });
+
+    $select.attr("data-occurance", newOccurance);
+  });
+
   // ===== Helper Methods =====
 
   function snakify(name) {
@@ -295,5 +317,133 @@ $(()=> {
         $input.removeClass("invalid").removeClass("empty").removeClass("duplicate");
       }
     });
+  }
+
+  function convertAmount(amount, occurance, newOccurance) {
+    function isLeapYear(year) {
+      return year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0);
+    }
+
+    const YEAR = new Date().getFullYear();
+    const DAYS_IN_YEAR = isLeapYear(YEAR) ? 366 : 365;
+    const WEEKS_IN_YEAR = DAYS_IN_YEAR / 7;
+
+    let newAmount;
+
+    if (newOccurance === "daily") {
+      if (occurance === "weekly") {
+        newAmount = amount / 7;
+      } else if (occurance === "fortnightly") {
+        newAmount = amount * 14;
+      } else if (occurance === "monthly") {
+        newAmount = (amount * 12) / DAYS_IN_YEAR;
+      } else if (occurance === "quarterly") {
+        newAmount = (amount * 4) / DAYS_IN_YEAR;
+      } else if (occurance === "six_monthly") {
+        newAmount = (amount * 2) / DAYS_IN_YEAR;
+      } else if (occurance === "yearly") {
+        newAmount = amount / DAYS_IN_YEAR;
+      } else {
+        newAmount = amount;
+      }
+    } else if (newOccurance === "weekly") {
+      if (occurance === "daily") {
+        newAmount = amount * 7;
+      } else if (occurance === "fortnightly") {
+        newAmount = amount / 2;
+      } else if (occurance === "monthly") {
+        newAmount = (amount * 12) / WEEKS_IN_YEAR;
+      } else if (occurance === "quarterly") {
+        newAmount = (amount * 4) / WEEKS_IN_YEAR;
+      } else if (occurance === "six_monthly") {
+        newAmount = (amount * 2) / WEEKS_IN_YEAR;
+      } else if (occurance === "yearly") {
+        newAmount = amount / WEEKS_IN_YEAR;
+      } else {
+        newAmount = amount;
+      }
+    } else if (newOccurance === "fortnightly") {
+      if (occurance === "daily") {
+        newAmount = amount * 14;
+      } else if (occurance === "weekly") {
+        newAmount = amount * 2;
+      } else if (occurance === "monthly") {
+        newAmount = ((amount * 12) / WEEKS_IN_YEAR) * 2;
+      } else if (occurance === "quarterly") {
+        newAmount = ((amount * 4) / WEEKS_IN_YEAR) * 2;
+      } else if (occurance === "six_monthly") {
+        newAmount = ((amount * 2) / WEEKS_IN_YEAR) * 2;
+      } else if (occurance === "yearly") {
+        newAmount = (amount / WEEKS_IN_YEAR) * 2;
+      } else {
+        newAmount = amount;
+      }
+    } else if (newOccurance === "monthly") {
+      if (occurance === "daily") {
+        newAmount = (amount * DAYS_IN_YEAR) / 12;
+      } else if (occurance === "weekly") {
+        newAmount = (amount * WEEKS_IN_YEAR) / 12;
+      } else if (occurance === "fortnightly") {
+        newAmount = ((amount / 2) * WEEKS_IN_YEAR) / 12;
+      } else if (occurance === "quarterly") {
+        newAmount = (amount * 4) / 12;
+      } else if (occurance === "six_monthly") {
+        newAmount = (amount * 2) / 12;
+      } else if (occurance === "yearly") {
+        newAmount = amount / 12;
+      } else {
+        newAmount = amount;
+      }
+    } else if (newOccurance === "quarterly") {
+      if (occurance === "daily") {
+        newAmount = amount * (DAYS_IN_YEAR / 4);
+      } else if (occurance === "weekly") {
+        newAmount = amount * (WEEKS_IN_YEAR / 4);
+      } else if (occurance === "fortnightly") {
+        newAmount = (amount / 2) * (WEEKS_IN_YEAR / 4);
+      } else if (occurance === "monthly") {
+        newAmount = amount * 3;
+      } else if (occurance === "six_monthly") {
+        newAmount = amount / 2;
+      } else if (occurance === "yearly") {
+        newAmount = amount / 4;
+      } else {
+        newAmount = amount;
+      }
+    } else if (newOccurance === "six_monthly") {
+      if (occurance === "daily") {
+        newAmount = (amount * DAYS_IN_YEAR) / 2;
+      } else if (occurance === "weekly") {
+        newAmount = (amount * WEEKS_IN_YEAR) / 2;
+      } else if (occurance === "fortnightly") {
+        newAmount = ((amount / 2) * WEEKS_IN_YEAR) / 2;
+      } else if (occurance === "monthly") {
+        newAmount = amount * 6;
+      } else if (occurance === "quarterly") {
+        newAmount = amount * 2;
+      } else if (occurance === "yearly") {
+        newAmount = amount / 2;
+      } else {
+        newAmount = amount;
+      }
+    } else if (newOccurance === "yearly") {
+      if (occurance === "daily") {
+        newAmount = amount * DAYS_IN_YEAR;
+      } else if (occurance === "weekly") {
+        newAmount = amount * WEEKS_IN_YEAR;
+      } else if (occurance === "fortnightly") {
+        newAmount = (amount / 2) * WEEKS_IN_YEAR;
+      } else if (occurance === "monthly") {
+        newAmount = amount * 12;
+      } else if (occurance === "quarterly") {
+        newAmount = amount * 4;
+      } else if (occurance === "six_monthly") {
+        newAmount = amount * 2;
+      } else {
+        newAmount = amount;
+      }
+    }
+
+    return newAmount.toFixed(2);
   }
 });
