@@ -289,7 +289,6 @@ header select {
 
 #summary #expenses {
   float: right;
-  padding-bottom: 0;
 }
 
 #summary #expenses,
@@ -298,7 +297,7 @@ header select {
 }
 
 #summary dl {
-  margin: 40px 0;
+  margin: 40px 0 0;
 }
 
 #summary #income dt,
@@ -333,7 +332,7 @@ header select {
   display: block;
   font-size: 28px;
   text-align: center;
-  margin: 0 auto;
+  margin: 40px auto 0;
 }
 
 #summary #expenses .category ~ dd {
@@ -343,10 +342,6 @@ header select {
 
 #summary #expenses .category ~ dd dl {
   font-size: 0;
-}
-
-#summary #expenses > dl {
-  margin-bottom: 0;
 }
 
 /* ===== Adjustments for larger screens ===== */
