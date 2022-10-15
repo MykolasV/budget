@@ -260,6 +260,10 @@ header select {
   border-radius: 6px;
 }
 
+dl, dt, dd {
+  height: auto;
+}
+
 #summary {
   display: flex;
   flex-direction: column;
@@ -267,18 +271,17 @@ header select {
   gap: 50px;
   justify-content: center;
   width: 95%;
-  padding: 100px 20px;
   margin: 0 auto;
-  border: 1px solid #dedddd;
-  border-radius: 12px;
 }
 
 #summary #income,
 #summary #expenses,
 #summary #spare_cash {
   width: 100%;
-  padding: 0 20px;
+  padding: 60px 30px;
   font-size: 0;
+  border: 1px solid #dedddd;
+  border-radius: 12px;
 }
 
 #summary dl {
@@ -291,19 +294,22 @@ header select {
 #summary #expenses dd {
   display: inline-block;
   font-size: 1.2rem;
-  width: 50%;
+  width: 60%;
   padding: 0 0 10px;
   margin: 10px 0;
   border-bottom: 1px solid #dedddd;;
 }
 
-#summary #income dt {
+#summary #income dt,
+#summary #expenses dt {
   text-align: left;
 }
 
-#summary #income dd {
+#summary #income dd,
+#summary #expenses dd {
   text-align: right;
   margin-bottom: 40px;
+  width: 40%;
 }
 
 #summary #expenses dt,
@@ -313,8 +319,9 @@ header select {
 
 #summary #expenses .category {
   display: block;
-  margin: 0 auto;
   font-size: 28px;
+  text-align: center;
+  margin: 0 auto;
 }
 
 #summary #expenses .category ~ dd {
@@ -342,17 +349,6 @@ header select {
   #save_expenses .category_wrapper {
     padding-left: 20px;
     padding-right: 20px;
-  }
-
-  #summary {
-    flex-direction: row;
-    justify-content: center;
-  }
-
-  #summary #income,
-  #summary #expenses,
-  #summary #spare_cash {
-    width: 45%;
   }
 }
 
@@ -387,7 +383,14 @@ header select {
   }
 
   #summary {
-    width: 80%;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  #summary #income,
+  #summary #expenses,
+  #summary #spare_cash {
+    width: 45%;
   }
 }
 
