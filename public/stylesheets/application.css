@@ -279,12 +279,16 @@ header select {
 #summary #expenses,
 #summary #spare_cash {
   width: 100%;
-  padding: 60px 30px;
+  padding: 60px 30px 40px;
   font-size: 0;
   border: 1px solid #dedddd;
   border-radius: 12px;
   background-color: #f5f5f5;
   float: left;
+}
+
+#summary #spare_cash {
+  padding-bottom: 60px;
 }
 
 #summary #expenses {
@@ -342,6 +346,22 @@ header select {
 
 #summary #expenses .category ~ dd dl {
   font-size: 0;
+}
+
+a {
+  display: block;
+  font-size: 1.2rem;
+  text-decoration: none;
+  width: 60px;
+  padding: 6px;
+  margin: 20px auto 0;
+  border-radius: 8px;
+  color: inherit;
+  background-color: #dfdfdf;
+}
+
+a:hover {
+  background-color: #cecece;
 }
 
 /* ===== Adjustments for larger screens ===== */
