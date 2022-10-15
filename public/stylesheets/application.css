@@ -256,6 +256,7 @@ input[type=number]::-webkit-outer-spin-button {
 #summary {
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
   gap: 50px;
   justify-content: center;
   width: 95%;
@@ -266,7 +267,8 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 #summary #income,
-#summary #expenses {
+#summary #expenses,
+#summary #spare_cash {
   width: 100%;
   padding: 0 20px;
   font-size: 0;
@@ -276,8 +278,10 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 40px 0;
 }
 
-#summary dt,
-#summary dd {
+#summary #income dt,
+#summary #income dd,
+#summary #expenses dt,
+#summary #expenses dd {
   display: inline-block;
   font-size: 1.2rem;
   width: 50%;
@@ -286,13 +290,33 @@ input[type=number]::-webkit-outer-spin-button {
   border-bottom: 1px solid #dedddd;;
 }
 
-#summary dt {
+#summary #income dt {
   text-align: left;
 }
 
-#summary dd {
+#summary #income dd {
   text-align: right;
   margin-bottom: 40px;
+}
+
+#summary #expenses dt,
+#summary #expenses dd {
+  font-size: 1.2rem;
+}
+
+#summary #expenses .category {
+  display: block;
+  margin: 0 auto;
+  font-size: 28px;
+}
+
+#summary #expenses .category ~ dd {
+  width: 100%;
+  border-bottom: none;
+}
+
+#summary #expenses .category ~ dd dl {
+  font-size: 0;
 }
 
 /* ===== Adjustments for larger screens ===== */
@@ -315,12 +339,13 @@ input[type=number]::-webkit-outer-spin-button {
 
   #summary {
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
   }
 
   #summary #income,
-  #summary #expenses {
-    width: 50%;
+  #summary #expenses,
+  #summary #spare_cash {
+    width: 45%;
   }
 }
 
@@ -355,7 +380,7 @@ input[type=number]::-webkit-outer-spin-button {
   }
 
   #summary {
-    width: 70%;
+    width: 80%;
   }
 }
 

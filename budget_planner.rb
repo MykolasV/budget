@@ -164,6 +164,7 @@ get "/summary" do
     obj[category] = session[:expenses][category].values.map { |expense| { name: expense["name"], amount: to_monthly(expense["amount"].to_f, expense["occurance"]) } }
   end
   @monthly_expenses_total = @monthly_expenses.values.flatten.reduce(0) { |sum, expense| sum + expense[:amount] }
+  @monthly_spare = (@monthly_income_total - @monthly_expenses_total).round(2)
 
   erb :summary, layout: :layout
 end
