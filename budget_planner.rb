@@ -127,7 +127,6 @@ post "/expenses" do
 
   if error_messages.empty?
     session[:expenses] = expenses_by_categories
-    session[:success_message] = "Expenses saved."
     redirect "/summary"
   else
     session[:error_messages] = error_messages
@@ -158,6 +157,16 @@ def to_monthly(amount, occurance)
 end
 
 get "/summary" do
+  if session[:income].length <= 0
+    session[:error_messages] << "Please provide some details about your income."
+    redirect "/income"
+  end
+
+  if (session[:expenses].length <= 0)
+    session[:error_messages] << "Please provide some details about your expenses."
+    redirect "/expenses"
+  end
+
   @monthly_income = session[:income].values.map { |income| { name: income["name"], amount: to_monthly(income["amount"].to_f, income["occurance"]) } }
   @monthly_income_total = @monthly_income.reduce(0) { |sum, income| sum + income[:amount] }
   @monthly_expenses = session[:expenses].keys.each_with_object({}) do |category, obj|
