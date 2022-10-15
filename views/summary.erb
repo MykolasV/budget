@@ -13,25 +13,25 @@
 
 <div id="summary">
   <section id="income">
-    <h3>Income: <span class="amount"><%= @monthly_income_total %></span></h3>
+    <h3>Income: £<span class="amount"><%= @monthly_income_total %></span></h3>
     <dl>
       <% @monthly_income.each do |income| %>
         <dt><%= income[:name] %></dt>
-        <dd><span class="amount"><%= income[:amount] %></span></dd>
+        <dd>£<span class="amount"><%= income[:amount] %></span></dd>
       <% end %>
     </dl>
   </section>
 
   <section id="expenses">
-    <h3>Expenses: <span class="amount"><%= @monthly_expenses_total %></span></h3>
+    <h3>Expenses: £<span class="amount"><%= @monthly_expenses_total %></span></h3>
     <dl>
       <% @monthly_expenses.each do |category, expenses| %>
-        <dt class="category"><%= category %></dt>
+        <dt class="category"><%= "#{category}: £<span class='amount'>#{expenses.reduce(0) { |sum, exp| sum + exp[:amount] } }" %></span></dt>
         <dd>
           <dl>
           <% expenses.each do |expense| %>
             <dt><%= expense[:name] %></dt>
-            <dd><span class="amount"><%= expense[:amount] %></span></dd>
+            <dd>£<span class="amount"><%= expense[:amount] %></span></dd>
           <% end %>
           </dl>
         </dd>
@@ -40,6 +40,6 @@
   </section>
 
   <section id="spare_cash">
-    <h3>Spare Cash: <span class="amount"><%= @monthly_spare %></span></h3>
+    <h3>Spare Cash: £<span class="amount"><%= @monthly_spare %></span></h3>
   </section>
 </div>

@@ -334,7 +334,7 @@ $(()=> {
       if (occurance === "weekly") {
         newAmount = amount / 7;
       } else if (occurance === "fortnightly") {
-        newAmount = amount * 14;
+        newAmount = amount / 14;
       } else if (occurance === "monthly") {
         newAmount = (amount * 12) / DAYS_IN_YEAR;
       } else if (occurance === "quarterly") {
