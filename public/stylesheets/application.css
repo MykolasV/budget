@@ -362,7 +362,7 @@ a.edit {
   background-color: #dfdfdf;
 }
 
-a:hover {
+a.edit:hover {
   background-color: #cecece;
 }
 
