@@ -1,0 +1,73 @@
+<header>
+  <h2>Edit Expenses</h2>
+</header>
+
+<form id="add_category">
+  <input type="text">
+  <button type="submit">Add Category</button>
+</form>
+
+<form method="post" action="/update_expenses" id="save_expenses">
+  <fieldset>
+    <% session[:expenses].each_with_index do |(category, expenses), idx| %>
+      <div class="category_wrapper" style="display: block;">
+        <label class="category_name">
+          <h3><%= category %></h3>
+          <input type="text" id="category_name_<%= idx + 1 %>" name="category_name_<%= idx + 1 %>" value="<%= category %>">
+          <a href="#" class="delete"><img src="/images/bin.png"></img></a>
+          <div class="dialog">
+            <p>Are you sure you want to delete this?</p>
+            <button type="button" class="confirm">Yes</button>
+            <button type="button" class="cancel">No</button>
+          </div>
+          <div class="overlay"></div>
+        </label>
+
+        <% expenses.each do |number, expense| %>
+          <div class="input_wrapper">
+            <dl>
+              <dt>
+                <label for="<%= category %>_name_<%= number %>">Expense</label>
+              </dt>
+              <dd>
+                <input type="text" id="<%= category %>_name_<%= number %>" name="<%= category %>_name_<%= number %>" value="<%= expense["name"] %>" data-previous-value="<%= expense["name"] %>">
+              </dd>
+              <dt>
+                <label for="<%= category %>_amount_<%= number %>">Amount</label>
+              </dt>
+              <dd>
+                <input type="number" id="<%= category %>_amount_<%= number %>" name="<%= category %>_amount_<%= number %>" value="<%= expense["amount"] %>" placeholder="0" min=".01" step=".01">
+              </dd>
+              <dt>
+                <label for="<%= category %>_occurance_<%= number %>">Occurance</label>
+              </dt>
+              <dd>
+                <select id="<%= category %>_occurance_<%= number %>" name="<%= category %>_occurance_<%= number %>">
+                  <option value="daily" <%= "selected" if expense["occurance"] == "daily" %>>Daily</option>
+                  <option value="weekly" <%= "selected" if expense["occurance"] == "weekly" %>>Weekly</option>
+                  <option value="fortnightly" <%= "selected" if expense["occurance"] == "fortnightly" %>>Fortnightly</option>
+                  <option value="monthly" <%= "selected" if expense["occurance"] == "monthly" %>>Monthly</option>
+                  <option value="quarterly" <%= "selected" if expense["occurance"] == "quarterly" %>>Quarterly</option>
+                  <option value="six-monthly" <%= "selected" if expense["occurance"] == "six-monthly" %>>Every Six Months</option>
+                  <option value="yearly" <%= "selected" if expense["occurance"] == "yearly" %>>Yearly</option>
+                </select>
+              </dd>
+            </dl>
+            <a href="#" class="delete"><img src="/images/bin.png"></img></a>
+            <div class="dialog">
+              <p>Are you sure you want to delete this?</p>
+              <button type="button" class="confirm">Yes</button>
+              <button type="button" class="cancel">No</button>
+            </div>
+            <div class="overlay"></div>
+          </div>
+        <% end %>
+        <a herf="#" class="add_input">+ Expense</a>
+      </div>
+    <% end %>
+  </fieldset>
+  <div id="actions">
+    <button type="submit">Save</button>
+    <a href="/summary" class="cancel">Cancel</a>
+  </div>
+</form>

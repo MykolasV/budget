@@ -202,3 +202,35 @@ post "/update_income" do
     erb :edit_income, layout: :layout
   end
 end
+
+get "/expenses/edit" do
+  erb :edit_expenses, layout: :layout
+end
+
+post "/update_expenses" do
+  categories = params.select { |key, value| key.start_with?("category_name") }.values
+  expenses_by_categories = categories.each_with_object({}) do |category, obj|
+    obj[category] = {}
+
+    params.each do |key, value|
+      if !key.start_with?("category_name") && key.start_with?(category)
+        number = key.split("_").last
+        field  = key.split("_")[-2]
+
+        obj[category][number] ||= {}
+        obj[category][number][field] = value.strip
+      end
+    end
+  end
+  
+  error_messages = error_messages_for_expenses(expenses_by_categories)
+
+  if error_messages.empty?
+    session[:expenses] = expenses_by_categories
+    session[:success_message] = "Expenses updated."
+    redirect "/summary"
+  else
+    session[:error_messages] = error_messages
+    erb :edit_expenses, layout: :layout
+  end
+end
