@@ -141,7 +141,8 @@ input[type=number]::-webkit-outer-spin-button {
 #save_income .add_input,
 #save_expenses button,
 #save_expenses .add_input,
-#add_category button {
+#add_category button,
+#actions a.cancel {
   display: block;
   font: inherit;
   background-color: #f0f0f0;
@@ -162,7 +163,8 @@ input[type=number]::-webkit-outer-spin-button {
 #save_income .add_input:hover,
 #save_expenses button:hover,
 #save_expenses .add_input:hover,
-#add_category button:hover {
+#add_category button:hover,
+#actions a.cancel:hover {
   background-color: #dedddd;
 }
 
@@ -362,6 +364,19 @@ a.edit {
 
 a:hover {
   background-color: #cecece;
+}
+
+/* ===== Edit Form */
+
+#actions button,
+#actions a.cancel {
+  display: inline-block;
+}
+
+#actions a.cancel {
+  text-decoration: none;
+  color: #000;
+  margin-left: 20px;
 }
 
 /* ===== Adjustments for larger screens ===== */

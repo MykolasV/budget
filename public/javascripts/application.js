@@ -19,7 +19,7 @@ $(()=> {
           $element.val("");
           if ($element.attr("id").includes("name")) $element.attr("data-previous-value", "");
         } else {
-          element.selected = false;
+          $element.find("option").first().attr("selected", true);
         }
       }
     });

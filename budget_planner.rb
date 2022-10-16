@@ -177,3 +177,28 @@ get "/summary" do
 
   erb :summary, layout: :layout
 end
+
+get "/income/edit" do
+  erb :edit_income, layout: :layout
+end
+
+post "/update_income" do
+  income = {}
+
+  params.each do |key, value|
+    number = key.split("_").last
+    field = key.split("_")[-2]
+    income[number] ||= {}
+    income[number][field] = value.strip
+  end
+
+  error_messages = error_messages_for_income(income)
+  if error_messages.empty?
+    session[:income] = income
+    session[:success_message] = "Income updated."
+    redirect "/summary"
+  else
+    session[:error_messages] = error_messages
+    erb :edit_income, layout: :layout
+  end
+end
