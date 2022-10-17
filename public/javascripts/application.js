@@ -346,6 +346,7 @@ $(()=> {
       }
     });
 
+    $target.text(newCategory);
     $target.next("input").val(newCategory);
     $target.attr("contenteditable", false);
   });
