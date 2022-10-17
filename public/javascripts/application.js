@@ -82,8 +82,13 @@ $(()=> {
       return;
     }
 
-    $target.next().css("display", "block");
-    $target.next().next().css("display", "block");
+    let $actions = $target.closest(".actions");
+
+    if ($actions.length > 0) {
+      $actions.next().css("display", "block").next().css("display", "block");
+    } else {
+      $target.next().css("display", "block").next().css("display", "block");
+    }
   });
 
   $("form").on("click", "button.cancel, .overlay", event => {
@@ -293,6 +298,56 @@ $(()=> {
     });
 
     $select.attr("data-occurance", newOccurance);
+  });
+
+  $("#save_expenses").on("click", ".category_name .edit", event => {
+    event.preventDefault();
+
+    let $target = $(event.target);
+    let $container = $target.closest(".category_name");
+    let $h3 = $container.find("h3");
+
+    $h3.attr("contenteditable", true).focus();
+  });
+
+  $("#save_expenses").on("blur", ".category_name h3", event => {
+    $(".flash").remove();
+
+    let $target = $(event.target);
+    let newCategory = $target.text().replace(/\s+/g, " ");
+
+    if (newCategory === "") {
+      $("body > header").after($(`<div class = 'flash error'><p>Please provide a new category name.</p></div>`));
+      $target.focus();
+      return;
+    }
+
+    let $duplicates = $(".category_name h3").filter((_, h3) => {
+      return h3 !== $target[0] && $(h3).text().toLowerCase() === newCategory.toLowerCase();
+    });
+
+    if ($duplicates.length > 0) {
+      $("body > header").after($(`<div class = 'flash error'><p>Category name exists.</p></div>`));
+      $target.focus();
+      return;
+    }
+
+    let $categoryWrapper = $target.closest(".category_wrapper");
+    $categoryWrapper.find(".input_wrapper").find("label, input, select").each((_, element) => {
+      let $element = $(element);
+
+      if ($element.prop("tagName") === "LABEL") {
+        let oldCategory = $element.attr("for").split(/_(name|amount|occurance)_\d+$/)[0];
+        $element.attr("for", $element.attr("for").replace(oldCategory, snakify(newCategory)));
+      } else {
+        let oldCategory = $element.attr("name").split(/_(name|amount|occurance)_\d+$/)[0];
+        $element.attr("id", $element.attr("id").replace(oldCategory, snakify(newCategory)));
+        $element.attr("name", $element.attr("name").replace(oldCategory, snakify(newCategory)));
+      }
+    });
+
+    $target.next("input").val(newCategory);
+    $target.attr("contenteditable", false);
   });
 
   // ===== Helper Methods =====
