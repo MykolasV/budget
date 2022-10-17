@@ -21,7 +21,7 @@ get "/income" do
     redirect "/expenses"
   end
 
-  erb :income_form, layout: :layout
+  erb :income, layout: :layout
 end
 
 # Return error messages if any values are invalid
@@ -58,7 +58,7 @@ post "/income" do
     redirect "/expenses"
   else
     session[:error_messages] = error_messages
-    erb :income_form, layout: :layout
+    erb :income, layout: :layout
   end
 end
 
@@ -74,7 +74,7 @@ get "/expenses" do
     redirect "/summary"
   end
 
-  erb :expenses_form, layout: :layout
+  erb :expenses, layout: :layout
 end
 
 # Return error messages if any values are invalid
@@ -130,7 +130,7 @@ post "/expenses" do
     redirect "/summary"
   else
     session[:error_messages] = error_messages
-    erb :expenses_form, layout: :layout
+    erb :expenses, layout: :layout
   end
 end
 
