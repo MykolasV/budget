@@ -4,7 +4,7 @@
 
 <form method="post" action="/update_income" id="save_income">
   <fieldset>
-    <% session[:income].each do |number, income| %>
+    <% @income.each do |number, income| %>
       <div class="input_wrapper">
         <dl>
           <dt>

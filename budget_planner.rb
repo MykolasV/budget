@@ -179,6 +179,8 @@ get "/summary" do
 end
 
 get "/income/edit" do
+  @income = session[:income]
+
   erb :edit_income, layout: :layout
 end
 
@@ -204,6 +206,8 @@ post "/update_income" do
 end
 
 get "/expenses/edit" do
+  @expenses = session[:expenses]
+
   erb :edit_expenses, layout: :layout
 end
 

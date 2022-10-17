@@ -9,7 +9,7 @@
 
 <form method="post" action="/update_expenses" id="save_expenses">
   <fieldset>
-    <% session[:expenses].each_with_index do |(category, expenses), idx| %>
+    <% @expenses.each_with_index do |(category, expenses), idx| %>
       <div class="category_wrapper" style="display: block;">
         <label class="category_name">
           <h3><%= category %></h3>
