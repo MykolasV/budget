@@ -169,7 +169,8 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 #save_income .delete img,
-#save_expenses .delete img {
+#save_expenses .delete img,
+#save_expenses .edit img {
   width: 27px;
   height: 27px;
 }
@@ -245,7 +246,7 @@ input[type=number]::-webkit-outer-spin-button {
 .category_name {
   display: block;
   position: relative;
-  margin: 0 0 30px;
+  margin: 0 0 20px;
 }
 
 .category_name input {
@@ -254,13 +255,26 @@ input[type=number]::-webkit-outer-spin-button {
 
 .category_name h3 {
   display: inline-block;
-  margin: 0 40px 0 0;
+  margin: 0 20px 10px 0;
 }
 
-#save_expenses .category_name .delete {
+#save_expenses .category_name .actions {
+  display: inline-block;
+}
+
+#save_expenses .category_name .delete,
+#save_expenses .category_name .edit {
   position: relative;
   display: inline-block;
   vertical-align: sub;
+  width: auto;
+  margin: 0;
+  padding: 0;
+}
+
+#save_expenses .category_name .edit {
+  background-color: #fff;
+  margin-right: 15px;
 }
 
 /* ===== Summary Page ===== */

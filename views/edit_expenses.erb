@@ -14,7 +14,10 @@
         <label class="category_name">
           <h3><%= category %></h3>
           <input type="text" id="category_name_<%= idx + 1 %>" name="category_name_<%= idx + 1 %>" value="<%= category %>">
-          <a href="#" class="delete"><img src="/images/bin.png"></img></a>
+          <div class="actions">
+            <a href="#" class="edit"><img src="/images/pen.png"></img></a>
+            <a href="#" class="delete"><img src="/images/bin.png"></img></a>
+          </div>
           <div class="dialog">
             <p>Are you sure you want to delete this?</p>
             <button type="button" class="confirm">Yes</button>
