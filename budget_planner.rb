@@ -9,6 +9,12 @@ configure do
   set :erb, :escape_html => true
 end
 
+helpers do
+  def format_category(name)
+    name.split("_").map { |str| str.capitalize }.join(" ")
+  end
+end
+
 before do
   session[:income] ||= {}
   session[:expenses] ||= {}
@@ -227,7 +233,7 @@ post "/update_expenses" do
       end
     end
   end
-  
+
   error_messages = error_messages_for_expenses(expenses_by_categories)
 
   if error_messages.empty?

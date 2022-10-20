@@ -173,7 +173,7 @@ $(()=> {
 
     if (category === "") {
       return;
-    } else if ($categoryWrapper.filter(function() { return $(this).find(".category_name input").val() === snakify(category) }).length > 0) {
+    } else if ($categoryWrapper.filter((_, wrapper) => $(wrapper).find(".category_name input").val() === snakify(category)).length > 0) {
       $("body > header").after($(`<div class = 'flash error'><p>Category names must be unique.</p></div>`));
       return;
     }
@@ -345,12 +345,16 @@ $(()=> {
       }
     });
 
-    $target.text(newCategory);
-    $target.next("input").val(newCategory);
+    $target.text(formatTitle(newCategory));
+    $target.next("input").val(snakify(newCategory));
     $target.attr("contenteditable", false);
   });
 
   // ===== Helper Methods =====
+
+  function formatTitle(name) {
+    return name.split(" ").map(str => str.replace(str[0], str[0].toUpperCase())).join(" ");
+  }
 
   function snakify(name) {
     return name.toLowerCase().split(" ").join("_");
