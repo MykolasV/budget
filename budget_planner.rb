@@ -11,7 +11,7 @@ end
 
 helpers do
   def format_title(name)
-    name.split("_").map { |str| str.capitalize }.join(" ")
+    name.split(/_| /).map { |str| str.capitalize }.join(" ")
   end
 end
 

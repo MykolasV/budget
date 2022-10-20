@@ -16,7 +16,7 @@
     <h3>Income: £<span class="amount" data-monthly-amount="<%= @monthly_income_total %>"><%= @monthly_income_total %></span></h3>
     <dl>
       <% @monthly_income.each do |income| %>
-        <dt><%= income[:name] %></dt>
+        <dt><%= format_title(income[:name]) %></dt>
         <dd>£<span class="amount" data-monthly-amount="<%= income[:amount] %>"><%= income[:amount] %></span></dd>
       <% end %>
     </dl>
@@ -33,7 +33,7 @@
         <dd>
           <dl>
           <% expenses.each do |expense| %>
-            <dt><%= expense[:name] %></dt>
+            <dt><%= format_title(expense[:name]) %></dt>
             <dd>£<span class="amount" data-monthly-amount="<%= expense[:amount] %>"><%= expense[:amount] %></span></dd>
           <% end %>
           </dl>
