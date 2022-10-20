@@ -12,7 +12,7 @@
     <% @expenses.each_with_index do |(category, expenses), idx| %>
       <div class="category_wrapper" style="display: block;">
         <label class="category_name">
-          <h3><%= format_category(category) %></h3>
+          <h3><%= format_title(category) %></h3>
           <input type="text" id="category_name_<%= idx + 1 %>" name="category_name_<%= idx + 1 %>" value="<%= category %>">
           <div class="actions">
             <a href="#" class="edit"><img src="/images/pen.png"></img></a>

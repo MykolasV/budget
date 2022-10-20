@@ -29,7 +29,7 @@
     <dl>
       <% @monthly_expenses.each do |category, expenses| %>
         <% total = expenses.reduce(0) { |sum, exp| sum + exp[:amount] } %>
-        <dt class="category"><%== "#{format_category(category)}: £<span class='amount' data-monthly-amount='#{total}'>#{total}" %></span></dt>
+        <dt class="category"><%== "#{format_title(category)}: £<span class='amount' data-monthly-amount='#{total}'>#{total}" %></span></dt>
         <dd>
           <dl>
           <% expenses.each do |expense| %>

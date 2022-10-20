@@ -10,7 +10,7 @@ configure do
 end
 
 helpers do
-  def format_category(name)
+  def format_title(name)
     name.split("_").map { |str| str.capitalize }.join(" ")
   end
 end

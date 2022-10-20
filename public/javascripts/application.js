@@ -179,7 +179,7 @@ $(()=> {
     }
 
     if ($categoryWrapper.length === 1 && $categoryWrapper.css("display") === "none") {
-      $categoryWrapper.find(".category_name h3").text(category);
+      $categoryWrapper.find(".category_name h3").text(formatTitle(category));
       $categoryWrapper.find(".category_name input").attr("id", "category_name_1")
                                                     .attr("name", "category_name_1")
                                                     .val(snakify(category));
@@ -231,7 +231,7 @@ $(()=> {
       $newCategoryWrapper.find(".input_wrapper").remove();
       $newCategoryWrapper.find(".category_name").after($newInputWrapper);
 
-      $newCategoryWrapper.find(".category_name h3").text(category);
+      $newCategoryWrapper.find(".category_name h3").text(formatTitle(category));
       $newCategoryNameInput = $newCategoryWrapper.find(".category_name input");
       $newCategoryNameInput.attr("id", $newCategoryNameInput.attr("id").replace(/\d+$/, num => String(Number(num) + 1)));
       $newCategoryNameInput.attr("name", $newCategoryNameInput.attr("name").replace(/\d+$/, num => String(Number(num) + 1)));
