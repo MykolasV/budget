@@ -35,6 +35,7 @@ $(()=> {
     let $container = $input.closest(".input_wrapper").parent();
     let $inputs = $container.find("input");
 
+    let isAmountInput = $input.attr("id").includes("amount");
     let isNameInput = $input.attr("id").includes("name");
     let $nameInputs;
     let $duplicates;
@@ -46,12 +47,23 @@ $(()=> {
     }
 
     if (value === "") {
-      $input.addClass("invalid").addClass("empty").removeClass("duplicate");
+      $input.addClass("invalid").addClass("empty").removeClass("duplicate").removeClass("bad_format");
     } else if (isNameInput && $duplicates.length > 0) {
       $input.addClass("invalid").addClass("duplicate").removeClass("empty");
       $duplicates.addClass("invalid").addClass("duplicate").removeClass("empty");
+    } else if (isAmountInput && value.match(/^\d+\.{1}\d{3,}$/)) {
+      value = value.match(/^\d+\.{1}\d{2}/)[0];
+      $input.val(value);
+    } else if (isAmountInput && value.match(/^\d+\.{1}\d{1}$/)) {
+      value += "0"
+      $input.val(value);
     } else {
-      $input.removeClass("invalid").removeClass("empty").removeClass("duplicate");
+      $input.removeClass("invalid").removeClass("empty").removeClass("duplicate").removeClass("bad_format");
+    
+      if (isAmountInput && value.slice(-3) !== ".00") {
+        value += ".00";
+        $input.val(value);
+      }
     }
 
     if (isNameInput && $previousValueDuplicates.length === 1 && $previousValueDuplicates.val() !== value) {
