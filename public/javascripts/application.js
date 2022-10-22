@@ -48,18 +48,20 @@ $(()=> {
     }
 
     if (value === "") {
-      $input.addClass("invalid").addClass("empty").removeClass("duplicate").removeClass("bad_format");
+      $input.addClass("invalid").addClass("empty").removeClass("duplicate");
     } else if (isNameInput && $duplicates.length > 0) {
       $input.addClass("invalid").addClass("duplicate").removeClass("empty");
       $duplicates.addClass("invalid").addClass("duplicate").removeClass("empty");
     } else if (isAmountInput && value.match(/^\d+\.{1}\d{3,}$/)) {
       value = value.match(/^\d+\.{1}\d{2}/)[0];
       $input.val(value);
+      $input.removeClass("invalid").removeClass("empty");
     } else if (isAmountInput && value.match(/^\d+\.{1}\d{1}$/)) {
       value += "0"
       $input.val(value);
+      $input.removeClass("invalid").removeClass("empty");
     } else {
-      $input.removeClass("invalid").removeClass("empty").removeClass("duplicate").removeClass("bad_format");
+      $input.removeClass("invalid").removeClass("empty").removeClass("duplicate");
     
       if (isAmountInput && value.slice(-3, -2) !== ".") $input.val(value + ".00");
     }
