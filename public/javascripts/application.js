@@ -61,7 +61,7 @@ $(()=> {
     } else {
       $input.removeClass("invalid").removeClass("empty").removeClass("duplicate").removeClass("bad_format");
     
-      if (isAmountInput) $input.val(value + ".00");
+      if (isAmountInput && value.slice(-3, -2) !== ".") $input.val(value + ".00");
     }
 
     if (isNameInput && $previousValueDuplicates.length === 1 && $previousValueDuplicates.val() !== value) {
@@ -291,6 +291,7 @@ $(()=> {
   $(".amount").each((_, amount) => {
     let $amount = $(amount);
     $amount.text(parseFloat($amount.text()).toLocaleString());
+    if ($amount.text().match(/\.\d{1}$/)) $amount.text($amount.text() + "0");
   });
 
   $("select#occurance").change(event => {
@@ -303,7 +304,9 @@ $(()=> {
       let $amount = $(amount);
       let monthlyValue = parseFloat($amount.attr("data-monthly-amount"));
       let newValue = convertAmountFromMonthly(monthlyValue, selectedOccurance);
-      $amount.text(newValue.toLocaleString());
+      newValue = newValue.toLocaleString();
+      if (newValue.match(/\.\d{1}$/)) newValue += "0";
+      $amount.text(newValue);
     });
 
     $select.attr("data-occurance", selectedOccurance);
