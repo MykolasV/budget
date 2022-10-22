@@ -61,10 +61,7 @@ $(()=> {
     } else {
       $input.removeClass("invalid").removeClass("empty").removeClass("duplicate").removeClass("bad_format");
     
-      if (isAmountInput && value.slice(-3) !== ".00") {
-        value += ".00";
-        $input.val(value);
-      }
+      if (isAmountInput) $input.val(value + ".00");
     }
 
     if (isNameInput && $previousValueDuplicates.length === 1 && $previousValueDuplicates.val() !== value) {
