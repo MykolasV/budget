@@ -36,6 +36,7 @@ $(()=> {
     let $inputs = $container.find("input");
 
     let isAmountInput = $input.attr("id").includes("amount");
+
     let isNameInput = $input.attr("id").includes("name");
     let $nameInputs;
     let $duplicates;
