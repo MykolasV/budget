@@ -39,7 +39,7 @@ def error_messages_for_income(income)
     messages << "Please provide the missing details."
   end
 
-  income_names = income.map { |_, inc| inc["name"] }
+  income_names = income.map { |_, inc| inc[:name] }
   if income_names.any? { |name| name != "" && income_names.count(name) > 1 }
     messages << "Income names must be unique."
   end
@@ -55,7 +55,7 @@ post "/income" do
     number = key.split("_").last
     field = key.split("_")[-2]
     income[number] ||= {}
-    income[number][field] = value.strip
+    income[number][field.to_sym] = value.strip
   end
 
   error_messages = error_messages_for_income(income)
@@ -104,7 +104,7 @@ def error_messages_for_expenses(expenses_by_categories)
   end
 
   if expenses.any? do |exp|
-       expense_names = exp.map { |expense| expense["name"] }
+       expense_names = exp.map { |expense| expense[:name] }
        expense_names.any? { |name| name != "" && expense_names.count(name) > 1 }
      end
     messages << "Expense names must be unique."
@@ -125,7 +125,7 @@ post "/expenses" do
         field  = key.split("_")[-2]
 
         obj[category][number] ||= {}
-        obj[category][number][field] = value.strip
+        obj[category][number][field.to_sym] = value.strip
       end
     end
   end
@@ -174,10 +174,10 @@ get "/summary" do
     redirect "/expenses"
   end
 
-  @monthly_income = session[:income].values.map { |income| { name: income["name"], amount: to_monthly(income["amount"].to_f, income["occurance"]) } }
+  @monthly_income = session[:income].values.map { |income| { name: income[:name], amount: to_monthly(income[:amount].to_f, income[:occurance]) } }
   @monthly_income_total = @monthly_income.reduce(0) { |sum, income| sum + income[:amount] }
   @monthly_expenses = session[:expenses].keys.each_with_object({}) do |category, obj|
-    obj[category] = session[:expenses][category].values.map { |expense| { name: expense["name"], amount: to_monthly(expense["amount"].to_f, expense["occurance"]) } }
+    obj[category] = session[:expenses][category].values.map { |expense| { name: expense[:name], amount: to_monthly(expense[:amount].to_f, expense[:occurance]) } }
   end
   @monthly_expenses_total = @monthly_expenses.values.flatten.reduce(0) { |sum, expense| sum + expense[:amount] }
   @monthly_spare = (@monthly_income_total - @monthly_expenses_total).round(2)
@@ -198,7 +198,7 @@ post "/update_income" do
     number = key.split("_").last
     field = key.split("_")[-2]
     income[number] ||= {}
-    income[number][field] = value.strip
+    income[number][field.to_sym] = value.strip
   end
 
   error_messages = error_messages_for_income(income)
@@ -229,7 +229,7 @@ post "/update_expenses" do
         field  = key.split("_")[-2]
 
         obj[category][number] ||= {}
-        obj[category][number][field] = value.strip
+        obj[category][number][field.to_sym] = value.strip
       end
     end
   end

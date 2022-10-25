@@ -11,25 +11,25 @@
             <label for="income_name_<%= number %>">Income</label>
           </dt>
           <dd>
-            <input type="text" id="income_name_<%= number %>" name="income_name_<%= number %>" value="<%= income["name"] %>" data-previous-value="<%= income["name"] %>">
+            <input type="text" id="income_name_<%= number %>" name="income_name_<%= number %>" value="<%= income[:name] %>" data-previous-value="<%= income[:name] %>">
           </dd>
           <dt>
             <label for="income_amount_<%= number %>">Amount</label>
           </dt>
           <dd>
-            <input type="number" id="income_amount_<%= number %>" name="income_amount_<%= number %>" value="<%= income["amount"] %>" placeholder="£0.00" min=".01" step=".01">
+            <input type="number" id="income_amount_<%= number %>" name="income_amount_<%= number %>" value="<%= income[:amount] %>" placeholder="£0.00" min=".01" step=".01">
           </dd>
           <dt>
             <label for="income_occurance_<%= number %>">Occurance</label>
           </dt>
           <dd>
             <select id="income_occurance_<%= number %>" name="income_occurance_<%= number %>">
-              <option value="weekly" <%== "selected" if income["occurance"] == "weekly" %>>Weekly</option>
-              <option value="fortnightly" <%== "selected" if income["occurance"] == "fortnightly" %>>Fortnightly</option>
-              <option value="monthly" <%== "selected" if income["occurance"] == "monthly" %>>Monthly</option>
-              <option value="quarterly" <%== "selected" if income["occurance"] == "quarterly" %>>Quarterly</option>
-              <option value="six_monthly" <%== "selected" if income["occurance"] == "six_monthly" %>>Every Six Months</option>
-              <option value="yearly" <%== "selected" if income["occurance"] == "yearly" %>>Yearly</option>
+              <option value="weekly" <%== "selected" if income[:occurance] == "weekly" %>>Weekly</option>
+              <option value="fortnightly" <%== "selected" if income[:occurance] == "fortnightly" %>>Fortnightly</option>
+              <option value="monthly" <%== "selected" if income[:occurance] == "monthly" %>>Monthly</option>
+              <option value="quarterly" <%== "selected" if income[:occurance] == "quarterly" %>>Quarterly</option>
+              <option value="six_monthly" <%== "selected" if income[:occurance] == "six_monthly" %>>Every Six Months</option>
+              <option value="yearly" <%== "selected" if income[:occurance] == "yearly" %>>Yearly</option>
             </select>
           </dd>
         </dl>
