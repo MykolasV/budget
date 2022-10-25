@@ -21,16 +21,6 @@ before do
   session[:error_messages] ||= []
 end
 
-# Render the income form
-get "/income" do
-  if session[:income].length > 0
-    session[:success_message] = "Income saved. You will be able to edit it later."
-    redirect "/expenses"
-  end
-
-  erb :income, layout: :layout
-end
-
 # Return error messages if any values are invalid
 def error_messages_for_income(income)
   messages = []
@@ -45,6 +35,67 @@ def error_messages_for_income(income)
   end
 
   messages
+end
+
+# Return error messages if any values are invalid
+def error_messages_for_expenses(expenses_by_categories)
+  messages = []
+
+  categories = expenses_by_categories.keys
+  expenses   = expenses_by_categories.values.map { |expenses| expenses.values }
+
+  if categories.any? { |category| category == "" }
+    messages << "Please provide the missing category names"
+  end
+
+  if categories.any? { |category| category != "" && categories.count(category) > 1 } 
+    messages << "Category names must be unique."
+  end
+
+  if expenses.flatten.any? { |expense| expense.any? { |_, value| value == "" } }
+    messages << "Please provide the missing details for expenses"
+  end
+
+  if expenses.any? do |exp|
+       expense_names = exp.map { |expense| expense[:name] }
+       expense_names.any? { |name| name != "" && expense_names.count(name) > 1 }
+     end
+    messages << "Expense names must be unique."
+  end
+
+  messages
+end
+
+# Return the converted monthly amount
+def to_monthly(amount, occurance)
+  days_in_year   = Date.today.leap? ? 366 : 365
+  weeks_in_year  = days_in_year / 7.0
+
+  if occurance == 'daily'
+    amount = (amount * days_in_year) / 12
+  elsif occurance == 'weekly'
+    amount = (amount * weeks_in_year) / 12
+  elsif occurance == 'fortnightly'
+    amount = ((amount / 2) * weeks_in_year) / 12
+  elsif occurance == 'quarterly'
+    amount = (amount * 4) / 12
+  elsif occurance == 'six_monthly'
+    amount = (amount * 2) / 12
+  elsif occurance == 'yearly'
+    amount = amount / 12
+  end
+
+  amount.round(2)
+end
+
+# Render the income form
+get "/income" do
+  if session[:income].length > 0
+    session[:success_message] = "Income saved. You will be able to edit it later."
+    redirect "/expenses"
+  end
+
+  erb :income, layout: :layout
 end
 
 # Submit information about income
@@ -84,35 +135,6 @@ get "/expenses" do
   erb :expenses, layout: :layout
 end
 
-# Return error messages if any values are invalid
-def error_messages_for_expenses(expenses_by_categories)
-  messages = []
-
-  categories = expenses_by_categories.keys
-  expenses   = expenses_by_categories.values.map { |expenses| expenses.values }
-
-  if categories.any? { |category| category == "" }
-    messages << "Please provide the missing category names"
-  end
-
-  if categories.any? { |category| category != "" && categories.count(category) > 1 } 
-    messages << "Category names must be unique."
-  end
-
-  if expenses.flatten.any? { |expense| expense.any? { |_, value| value == "" } }
-    messages << "Please provide the missing details for expenses"
-  end
-
-  if expenses.any? do |exp|
-       expense_names = exp.map { |expense| expense[:name] }
-       expense_names.any? { |name| name != "" && expense_names.count(name) > 1 }
-     end
-    messages << "Expense names must be unique."
-  end
-
-  messages
-end
-
 # Submit information about expenses
 post "/expenses" do
   categories = params.select { |key, value| key.start_with?("category_name") }.values
@@ -139,28 +161,6 @@ post "/expenses" do
     session[:error_messages] = error_messages
     erb :expenses, layout: :layout
   end
-end
-
-# Return the converted monthly amount
-def to_monthly(amount, occurance)
-  days_in_year   = Date.today.leap? ? 366 : 365
-  weeks_in_year  = days_in_year / 7.0
-
-  if occurance == 'daily'
-    amount = (amount * days_in_year) / 12
-  elsif occurance == 'weekly'
-    amount = (amount * weeks_in_year) / 12
-  elsif occurance == 'fortnightly'
-    amount = ((amount / 2) * weeks_in_year) / 12
-  elsif occurance == 'quarterly'
-    amount = (amount * 4) / 12
-  elsif occurance == 'six_monthly'
-    amount = (amount * 2) / 12
-  elsif occurance == 'yearly'
-    amount = amount / 12
-  end
-
-  amount.round(2)
 end
 
 get "/summary" do
