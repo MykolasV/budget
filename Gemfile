@@ -7,5 +7,6 @@ gem 'sinatra-contrib'
 gem 'erubis'
 gem 'minitest', '~> 5.16'
 gem 'minitest-reporters', '~> 1.5'
+gem 'rack-test'
 gem 'rake'
 gem 'simplecov', require: false, group: :test
