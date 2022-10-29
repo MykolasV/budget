@@ -168,6 +168,7 @@ post "/expenses" do
   end
 end
 
+# Render the summary page
 get "/summary" do
   if session[:income].length <= 0
     session[:error_messages] << "Please provide some details about your income."
@@ -190,6 +191,7 @@ get "/summary" do
   erb :summary, layout: :layout
 end
 
+# Render the edit income page
 get "/income/edit" do
   if session[:income].length <= 0
     session[:error_messages] << "Please provide some details about your income."
@@ -206,6 +208,7 @@ get "/income/edit" do
   erb :edit_income, layout: :layout
 end
 
+# Update income
 post "/update_income" do
   income = {}
 
@@ -227,6 +230,7 @@ post "/update_income" do
   end
 end
 
+# Render the edit expenses page
 get "/expenses/edit" do
   if session[:income].length <= 0
     session[:error_messages] << "Please provide some details about your income."
@@ -243,6 +247,7 @@ get "/expenses/edit" do
   erb :edit_expenses, layout: :layout
 end
 
+# Update expenses
 post "/update_expenses" do
   categories = params.select { |key, value| key.start_with?("category_name") }.values
   expenses_by_categories = categories.each_with_object({}) do |category, obj|
