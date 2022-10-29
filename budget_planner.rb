@@ -88,6 +88,11 @@ def to_monthly(amount, occurance)
   amount.round(2)
 end
 
+# Redirect to income page
+get "/" do
+  redirect "/income"
+end
+
 # Render the income form
 get "/income" do
   if session[:income].length > 0
