@@ -191,6 +191,16 @@ get "/summary" do
 end
 
 get "/income/edit" do
+  if session[:income].length <= 0
+    session[:error_messages] << "Please provide some details about your income."
+    redirect "/income"
+  end
+
+  if session[:expenses].length <= 0
+    session[:success_message] = "Please provide some details about your expenses."
+    redirect "/expenses"
+  end
+
   @income = session[:income]
 
   erb :edit_income, layout: :layout
@@ -218,6 +228,16 @@ post "/update_income" do
 end
 
 get "/expenses/edit" do
+  if session[:income].length <= 0
+    session[:error_messages] << "Please provide some details about your income."
+    redirect "/income"
+  end
+
+  if session[:expenses].length <= 0
+    session[:success_message] = "Please provide some details about your expenses."
+    redirect "/expenses"
+  end
+
   @expenses = session[:expenses]
 
   erb :edit_expenses, layout: :layout
