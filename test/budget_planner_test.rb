@@ -18,6 +18,10 @@ class BudgetTest < Minitest::Test
     Sinatra::Application
   end
 
+  def session
+    last_request.env["rack.session"]
+  end
+
   def test_home
     get "/"
     assert_equal(302, last_response.status)
@@ -46,12 +50,12 @@ class BudgetTest < Minitest::Test
 
     get "/income"
     assert_equal(302, last_response.status)
+    assert_equal('Income saved. You will be able to edit it later.', session[:success_message])
 
     get last_response["Location"]
     assert_equal(200, last_response.status)
     assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
     assert_includes(last_response.body, '<h2>Expenses</h2>')
-    assert_includes(last_response.body, '<p>Income saved. You will be able to edit it later.</p>')
     assert_includes(last_response.body, '<form id="add_category">')
     assert_includes(last_response.body, '<form method="post" action="/expenses" id="save_expenses">')
     assert_includes(last_response.body, '<a herf="#" class="add_input">+ Expense</a>')
@@ -61,23 +65,23 @@ class BudgetTest < Minitest::Test
   def test_expenses_with_no_income
     get "/expenses"
     assert_equal(302, last_response.status)
+    assert_includes(session[:error_messages], 'Please provide some details about your income.')
 
     get last_response["Location"]
     assert_equal(200, last_response.status)
     assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
-    assert_includes(last_response.body, '<p>Please provide some details about your income.</p>')
     assert_includes(last_response.body, '<form method="post" action="/income" id="save_income">')
   end
 
   def test_expenses
     post "/income", { income_name_1: "salary", income_amount_1: "700.00", income_occurance_1: "fortnightly" }
     assert_equal(302, last_response.status)
+    assert_equal('Income saved. You will be able to edit it later.', session[:success_message])
 
     get last_response["Location"]
     assert_equal(200, last_response.status)
     assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
     assert_includes(last_response.body, '<h2>Expenses</h2>')
-    assert_includes(last_response.body, '<p>Income saved. You will be able to edit it later.</p>')
     assert_includes(last_response.body, '<form id="add_category">')
     assert_includes(last_response.body, '<form method="post" action="/expenses" id="save_expenses">')
     assert_includes(last_response.body, '<a herf="#" class="add_input">+ Expense</a>')
@@ -90,10 +94,10 @@ class BudgetTest < Minitest::Test
 
     get "/expenses"
     assert_equal(302, last_response.status)
+    assert_equal("Expenses saved.", session[:success_message])
 
     get last_response["Location"]
     assert_equal(200, last_response.status)
-    assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
     assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
     assert_includes(last_response.body, '<h1>Budget Planner</h1>')
     assert_includes(last_response.body, '<h2>Summary</h2>')
@@ -107,11 +111,11 @@ class BudgetTest < Minitest::Test
   def test_summary_with_no_income
     get "/summary"
     assert_equal(302, last_response.status)
+    assert_includes(session[:error_messages], 'Please provide some details about your income.')
 
     get last_response["Location"]
     assert_equal(200, last_response.status)
     assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
-    assert_includes(last_response.body, '<p>Please provide some details about your income.')
     assert_includes(last_response.body, '<form method="post" action="/income" id="save_income">')
     assert_includes(last_response.body, '<a herf="#" class="add_input">+ Income</a>')
     assert_includes(last_response.body, '<button type="submit">Save</button>')
@@ -120,18 +124,19 @@ class BudgetTest < Minitest::Test
   def test_summary_with_no_expenses
     post "/income", { income_name_1: "salary", income_amount_1: "700.00", income_occurance_1: "fortnightly" }
     assert_equal(302, last_response.status)
+    assert_equal('Income saved. You will be able to edit it later.', session[:success_message])
+
     get last_response["Location"]
     assert_equal(200, last_response.status)
     assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
-    assert_includes(last_response.body, '<p>Income saved. You will be able to edit it later.')
 
     get "/summary"
     assert_equal(302, last_response.status)
+    assert_includes(session[:error_messages], 'Please provide some details about your expenses.')
 
     get last_response["Location"]
     assert_equal(200, last_response.status)
     assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
-    assert_includes(last_response.body, '<p>Please provide some details about your expenses.')
     assert_includes(last_response.body, '<form id="add_category">')
     assert_includes(last_response.body, '<form method="post" action="/expenses" id="save_expenses">')
     assert_includes(last_response.body, '<a herf="#" class="add_input">+ Expense</a>')
@@ -174,11 +179,11 @@ class BudgetTest < Minitest::Test
   def test_edit_income_without_income
     get "/income/edit"
     assert_equal(302, last_response.status)
+    assert_includes(session[:error_messages], 'Please provide some details about your income.')
 
     get last_response["Location"]
     assert_equal(200, last_response.status)
     assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
-    assert_includes(last_response.body, '<p>Please provide some details about your income.</p>')
     assert_includes(last_response.body, '<form method="post" action="/income" id="save_income">')
   end
 
@@ -187,11 +192,11 @@ class BudgetTest < Minitest::Test
 
     get "income/edit"
     assert_equal(302, last_response.status)
+    assert_includes(session[:error_messages], 'Please provide some details about your expenses.')
 
     get last_response["Location"]
     assert_equal(200, last_response.status)
     assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
-    assert_includes(last_response.body, '<p>Please provide some details about your expenses.</p>')
     assert_includes(last_response.body, '<form method="post" action="/expenses" id="save_expenses">')
   end
 
@@ -199,6 +204,7 @@ class BudgetTest < Minitest::Test
     post "/income", { income_name_1: "salary", income_amount_1: "700.00", income_occurance_1: "fortnightly" }
     post "/expenses", { category_name_1: "essentials", essentials_name_1: "rent", essentials_amount_1: "462.00", essentials_occurance_1: "monthly" }
     post "/update_income", { income_name_1: "royalties", income_amount_1: "700.00", income_occurance_1: "fortnightly" }
+    assert_equal('Income updated.', session[:success_message])
 
     get "/summary"
     assert_equal(200, last_response.status)
@@ -226,11 +232,11 @@ class BudgetTest < Minitest::Test
   def test_edit_expenses_without_income
     get "/expenses/edit"
     assert_equal(302, last_response.status)
+    assert_includes(session[:error_messages], 'Please provide some details about your income.')
 
     get last_response["Location"]
     assert_equal(200, last_response.status)
     assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
-    assert_includes(last_response.body, '<p>Please provide some details about your income.</p>')
     assert_includes(last_response.body, '<form method="post" action="/income" id="save_income">')
   end
 
@@ -239,11 +245,11 @@ class BudgetTest < Minitest::Test
 
     get "/expenses/edit"
     assert_equal(302, last_response.status)
+    assert_includes(session[:error_messages], 'Please provide some details about your expenses.')
 
     get last_response["Location"]
     assert_equal(200, last_response.status)
     assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
-    assert_includes(last_response.body, '<p>Please provide some details about your expenses.</p>')
     assert_includes(last_response.body, '<form method="post" action="/expenses" id="save_expenses">')
   end
 
@@ -251,7 +257,8 @@ class BudgetTest < Minitest::Test
     post "/income", { income_name_1: "salary", income_amount_1: "700.00", income_occurance_1: "fortnightly" }
     post "/expenses", { category_name_1: "essentials", essentials_name_1: "rent", essentials_amount_1: "462.00", essentials_occurance_1: "monthly" }
     post "/update_expenses", { category_name_1: "other", other_name_1: "transport", other_amount_1: "40.00", other_occurance_1: "weekly" }
-  
+    assert_equal('Expenses updated.', session[:success_message])
+
     get "/summary"
     assert_equal(200, last_response.status)
     assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
