@@ -199,7 +199,7 @@ get "/income/edit" do
   end
 
   if session[:expenses].length <= 0
-    session[:success_message] = "Please provide some details about your expenses."
+    session[:error_messages] << "Please provide some details about your expenses."
     redirect "/expenses"
   end
 
