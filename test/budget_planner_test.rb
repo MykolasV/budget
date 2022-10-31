@@ -46,9 +46,7 @@ class BudgetTest < Minitest::Test
   end
 
   def test_income_with_income
-    post "/income", { income_name_1: "salary", income_amount_1: "700.00", income_occurance_1: "fortnightly" }
-
-    get "/income"
+    get "/income", {}, { "rack.session" => { income: { "1" => { name: "salary", amount: "700.00", occurance: "fortnightly" } } } }
     assert_equal(302, last_response.status)
     assert_equal('Income saved. You will be able to edit it later.', session[:success_message])
 
@@ -74,11 +72,7 @@ class BudgetTest < Minitest::Test
   end
 
   def test_expenses
-    post "/income", { income_name_1: "salary", income_amount_1: "700.00", income_occurance_1: "fortnightly" }
-    assert_equal(302, last_response.status)
-    assert_equal('Income saved. You will be able to edit it later.', session[:success_message])
-
-    get last_response["Location"]
+    get "/expenses", {}, { "rack.session" => { income: { "1" => { name: "salary", amount: "700.00", occurance: "fortnightly" } } } }
     assert_equal(200, last_response.status)
     assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
     assert_includes(last_response.body, '<h2>Expenses</h2>')
@@ -89,12 +83,15 @@ class BudgetTest < Minitest::Test
   end
 
   def test_expenses_with_expenses
-    post "/income", { income_name_1: "salary", income_amount_1: "700.00", income_occurance_1: "fortnightly" }
-    post "/expenses", { category_name_1: "essentials", essentials_name_1: "rent", essentials_amount_1: "462.00", essentials_occurance_1: "monthly" }
+    get "/expenses", {}, { 
+      "rack.session" => { 
+        income: { "1" => { name: "salary", amount: "700.00", occurance: "fortnightly" } },
+        expenses: { "essentials" => { "1" => { name: "rent", amount: "462.00", occurance: "monthly" } } }
+      }
+    }
 
-    get "/expenses"
     assert_equal(302, last_response.status)
-    assert_equal("Expenses saved.", session[:success_message])
+    assert_equal('Expenses saved.', session[:success_message])
 
     get last_response["Location"]
     assert_equal(200, last_response.status)
@@ -122,15 +119,7 @@ class BudgetTest < Minitest::Test
   end
 
   def test_summary_with_no_expenses
-    post "/income", { income_name_1: "salary", income_amount_1: "700.00", income_occurance_1: "fortnightly" }
-    assert_equal(302, last_response.status)
-    assert_equal('Income saved. You will be able to edit it later.', session[:success_message])
-
-    get last_response["Location"]
-    assert_equal(200, last_response.status)
-    assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
-
-    get "/summary"
+    get "/summary", {}, { "rack.session" => { income: { "1" => { name: "salary", amount: "700.00", occurance: "fortnightly" } } } }
     assert_equal(302, last_response.status)
     assert_includes(session[:error_messages], 'Please provide some details about your expenses.')
 
@@ -143,11 +132,14 @@ class BudgetTest < Minitest::Test
     assert_includes(last_response.body, '<button type="submit">Save</button>')
   end
 
-  def test_summary
-    post "/income", { income_name_1: "salary", income_amount_1: "700.00", income_occurance_1: "fortnightly" }
-    post "/expenses", { category_name_1: "essentials", essentials_name_1: "rent", essentials_amount_1: "462.00", essentials_occurance_1: "monthly" }
-  
-    get "/summary"
+  def test_summary  
+    get "/summary", {}, { 
+      "rack.session" => { 
+        income: { "1" => { name: "salary", amount: "700.00", occurance: "fortnightly" } },
+        expenses: { "essentials" => { "1" => { name: "rent", amount: "462.00", occurance: "monthly" } } }
+      }
+    }
+
     assert_equal(200, last_response.status)
     assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
     assert_includes(last_response.body, '<h1>Budget Planner</h1>')
@@ -160,10 +152,13 @@ class BudgetTest < Minitest::Test
   end
 
   def test_edit_income
-    post "/income", { income_name_1: "salary", income_amount_1: "700.00", income_occurance_1: "fortnightly" }
-    post "/expenses", { category_name_1: "essentials", essentials_name_1: "rent", essentials_amount_1: "462.00", essentials_occurance_1: "monthly" }
+    get "/income/edit", {}, { 
+      "rack.session" => { 
+        income: { "1" => { name: "salary", amount: "700.00", occurance: "fortnightly" } },
+        expenses: { "essentials" => { "1" => { name: "rent", amount: "462.00", occurance: "monthly" } } }
+      }
+    }
 
-    get "/income/edit"
     assert_equal(200, last_response.status)
     assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
     assert_includes(last_response.body, '<h2>Edit Income</h2>')
@@ -188,9 +183,7 @@ class BudgetTest < Minitest::Test
   end
 
   def test_edit_income_without_expenses
-    post "/income", { income_name_1: "salary", income_amount_1: "700.00", income_occurance_1: "fortnightly" }
-
-    get "income/edit"
+    get "income/edit", {}, { "rack.session" => { income: { "1" => { name: "salary", amount: "700.00", occurance: "fortnightly" } } } }
     assert_equal(302, last_response.status)
     assert_includes(session[:error_messages], 'Please provide some details about your expenses.')
 
@@ -201,12 +194,21 @@ class BudgetTest < Minitest::Test
   end
 
   def test_update_income
-    post "/income", { income_name_1: "salary", income_amount_1: "700.00", income_occurance_1: "fortnightly" }
-    post "/expenses", { category_name_1: "essentials", essentials_name_1: "rent", essentials_amount_1: "462.00", essentials_occurance_1: "monthly" }
-    post "/update_income", { income_name_1: "royalties", income_amount_1: "700.00", income_occurance_1: "fortnightly" }
+    post "/update_income",
+    {
+      income_name_1: "royalties", income_amount_1: "700.00", income_occurance_1: "fortnightly" 
+    },
+    { 
+      "rack.session" => { 
+        income: { "1" => { name: "salary", amount: "700.00", occurance: "fortnightly" } },
+        expenses: { "essentials" => { "1" => { name: "rent", amount: "462.00", occurance: "monthly" } } }
+      }
+    }
+
+    assert_equal(302, last_response.status)
     assert_equal('Income updated.', session[:success_message])
 
-    get "/summary"
+    get last_response["Location"]
     assert_equal(200, last_response.status)
     assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
     assert_includes(last_response.body, '<h2>Summary</h2>')
@@ -216,10 +218,13 @@ class BudgetTest < Minitest::Test
   end
 
   def test_edit_expenses
-    post "/income", { income_name_1: "salary", income_amount_1: "700.00", income_occurance_1: "fortnightly" }
-    post "/expenses", { category_name_1: "essentials", essentials_name_1: "rent", essentials_amount_1: "462.00", essentials_occurance_1: "monthly" }
+    get "/expenses/edit", {}, { 
+      "rack.session" => { 
+        income: { "1" => { name: "salary", amount: "700.00", occurance: "fortnightly" } },
+        expenses: { "essentials" => { "1" => { name: "rent", amount: "462.00", occurance: "monthly" } } }
+      }
+    }
 
-    get "/expenses/edit"
     assert_equal(200, last_response.status)
     assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
     assert_includes(last_response.body, '<h2>Edit Expenses</h2>')
@@ -241,9 +246,7 @@ class BudgetTest < Minitest::Test
   end
 
   def test_edit_expenses_without_expenses
-    post "/income", { income_name_1: "salary", income_amount_1: "700.00", income_occurance_1: "fortnightly" }
-
-    get "/expenses/edit"
+    get "/expenses/edit", {}, { "rack.session" => { income: { "1" => { name: "salary", amount: "700.00", occurance: "fortnightly" } } } }
     assert_equal(302, last_response.status)
     assert_includes(session[:error_messages], 'Please provide some details about your expenses.')
 
@@ -254,12 +257,21 @@ class BudgetTest < Minitest::Test
   end
 
   def test_update_expenses
-    post "/income", { income_name_1: "salary", income_amount_1: "700.00", income_occurance_1: "fortnightly" }
-    post "/expenses", { category_name_1: "essentials", essentials_name_1: "rent", essentials_amount_1: "462.00", essentials_occurance_1: "monthly" }
-    post "/update_expenses", { category_name_1: "other", other_name_1: "transport", other_amount_1: "40.00", other_occurance_1: "weekly" }
+    post "/update_expenses",
+    {
+      category_name_1: "other", other_name_1: "transport", other_amount_1: "40.00", other_occurance_1: "weekly"
+    },
+    { 
+      "rack.session" => { 
+        income: { "1" => { name: "salary", amount: "700.00", occurance: "fortnightly" } },
+        expenses: { "essentials" => { "1" => { name: "rent", amount: "462.00", occurance: "monthly" } } }
+      }
+    }
+
+    assert_equal(302, last_response.status)
     assert_equal('Expenses updated.', session[:success_message])
 
-    get "/summary"
+    get last_response["Location"]
     assert_equal(200, last_response.status)
     assert_equal("text/html;charset=utf-8", last_response["Content-Type"])
     assert_includes(last_response.body, '<h2>Summary</h2>')
