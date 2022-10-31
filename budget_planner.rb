@@ -161,6 +161,7 @@ post "/expenses" do
 
   if error_messages.empty?
     session[:expenses] = expenses_by_categories
+    session[:success_message] = "Expenses saved."
     redirect "/summary"
   else
     session[:error_messages] = error_messages
