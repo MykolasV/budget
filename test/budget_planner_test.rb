@@ -175,7 +175,18 @@ class BudgetTest < Minitest::Test
     get "/summary", {}, { 
       "rack.session" => { 
         income: { "1" => { name: "salary", amount: "700.00", occurance: "fortnightly" } },
-        expenses: { "essentials" => { "1" => { name: "rent", amount: "462.00", occurance: "monthly" } } }
+        expenses: {
+          "essentials" => {
+            "1" => { name: "rent", amount: "462.00", occurance: "monthly" },
+            "2" => { name: "coffee", amount: "2.50", occurance: "daily" },
+            "3" => { name: "transport", amount: "40.00", occurance: "weekly" },
+            "4" => { name: "water", amount: "80.00", occurance: "six_monthly" }
+          },
+          "other" => {
+            "1" => { name: "cinema", amount: "20.00", occurance: "quarterly" },
+            "2" => { name: "holiday", amount: "300", occurance: "yearly" }
+          }
+        }
       }
     }
 
@@ -186,8 +197,8 @@ class BudgetTest < Minitest::Test
     assert_includes(last_response.body, '<select id="occurance" data-occurance="monthly">')
     assert_includes(last_response.body, '<option value="monthly" selected>Monthly</option>')
     assert_includes(last_response.body, '<h3>Income: £<span class="amount" data-monthly-amount="1520.83">1520.83</span></h3>')
-    assert_includes(last_response.body, '<h3>Expenses: £<span class="amount" data-monthly-amount="462.0">462.0</span></h3>')
-    assert_includes(last_response.body, '<h3>Spare Cash: £<span class="amount" data-monthly-amount="1058.83">1058.83</span></h3>')
+    assert_includes(last_response.body, '<h3>Expenses: £<span class="amount" data-monthly-amount="756.85">756.85</span></h3>')
+    assert_includes(last_response.body, '<h3>Spare Cash: £<span class="amount" data-monthly-amount="763.98">763.98</span></h3>')
   end
 
   def test_edit_income
