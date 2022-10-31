@@ -182,11 +182,11 @@ get "/summary" do
   end
 
   @monthly_income = session[:income].values.map { |income| { name: income[:name], amount: to_monthly(income[:amount].to_f, income[:occurance]) } }
-  @monthly_income_total = @monthly_income.reduce(0) { |sum, income| sum + income[:amount] }
+  @monthly_income_total = @monthly_income.reduce(0) { |sum, income| sum + income[:amount] }.round(2)
   @monthly_expenses = session[:expenses].keys.each_with_object({}) do |category, obj|
     obj[category] = session[:expenses][category].values.map { |expense| { name: expense[:name], amount: to_monthly(expense[:amount].to_f, expense[:occurance]) } }
   end
-  @monthly_expenses_total = @monthly_expenses.values.flatten.reduce(0) { |sum, expense| sum + expense[:amount] }
+  @monthly_expenses_total = @monthly_expenses.values.flatten.reduce(0) { |sum, expense| sum + expense[:amount] }.round(2)
   @monthly_spare = (@monthly_income_total - @monthly_expenses_total).round(2)
 
   erb :summary, layout: :layout
