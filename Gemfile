@@ -10,3 +10,7 @@ gem 'minitest-reporters', '~> 1.5'
 gem 'rack-test'
 gem 'rake'
 gem 'simplecov', require: false, group: :test
+
+group :production do
+  gem "puma"
+end
