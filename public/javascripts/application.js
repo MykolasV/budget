@@ -368,7 +368,7 @@ $(()=> {
   // ===== Helper Methods =====
 
   function formatTitle(name) {
-    return name.split(" ").map(str => str.replace(str[0], str[0].toUpperCase())).join(" ");
+    return name.trim().split(" ").map(str => str.replace(str[0], str[0].toUpperCase())).join(" ");
   }
 
   function snakify(name) {
