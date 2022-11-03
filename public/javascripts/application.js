@@ -31,7 +31,8 @@ $(()=> {
     $(".flash").remove();
 
     let $input = $(event.target);
-    let value = $input.val().trim();
+    let value = $input.val().toLowerCase().trim().replace(/\s+/g, " ");
+    $input.val(value);
     let $container = $input.closest(".input_wrapper").parent();
     let $inputs = $container.find("input");
 
