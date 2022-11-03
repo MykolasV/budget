@@ -133,7 +133,8 @@ input[type=number]::-webkit-outer-spin-button {
   border-radius: 6px;
 }
 
-.input_wrapper input.invalid {
+.input_wrapper input.invalid,
+#add_category input.invalid {
   border: 1px solid red;
 }
 

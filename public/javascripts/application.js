@@ -180,7 +180,11 @@ $(()=> {
 
     $(".flash").remove();
 
-    let category = $(event.target).find("input").val().trim();
+    let $input = $(event.target).find("input");
+    let category = $input.val().toLowerCase().trim().replace(/\s+/g, " ");
+
+    $input.removeClass("invalid");
+    $input.val(category);
 
     $categoryWrapper = $("#save_expenses .category_wrapper");
 
@@ -188,6 +192,7 @@ $(()=> {
       return;
     } else if ($categoryWrapper.filter((_, wrapper) => $(wrapper).find(".category_name input").val() === snakify(category)).length > 0) {
       $("body > header").after($(`<div class = 'flash error'><p>Category names must be unique.</p></div>`));
+      $input.addClass("invalid");
       return;
     }
 
